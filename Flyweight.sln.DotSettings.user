@@ -1,0 +1,13 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AGeneratedCodeAttribute_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003F1c6bef7c647807b7a913c61351aa1b7c938284a8d1236681897f3047ee75_003FGeneratedCodeAttribute_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AGenerateFlyweightClassAttribute_002Eg_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003Fvar_003Ffolders_003Fyn_003Fmmqzx6sd6zj466mjwgc86j9h0000gn_003FT_003FSourceGeneratedDocuments_003FCB4FA3B42DF1C0FDD7AB0ED8_003FSkaar_002EFlyweight_002ECodeGeneration_003FSkaar_002EFlyweight_002EClassGenerator_003FGenerateFlyweightClassAttribute_002Eg_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
+  &lt;Assembly Path="/Users/skaar/Dev/Skaar/Flyweight/src/Skaar.Flyweight.CodeGeneration/bin/Debug/netstandard2.0/Skaar.Flyweight.CodeGeneration.dll" /&gt;
+  &lt;Assembly Path="/Users/skaar/Dev/Skaar/Flyweight/src/Skaar.Flyweight/bin/Debug/net9.0/Skaar.Flyweight.dll" /&gt;
+&lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ddc3d3e4_002Df533_002D4a66_002D9a03_002D9e74fad6861b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="FlyweightTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::C4490CAD-7A55-42E7-AEB0-92465BC3BEBC::net9.0::Skaar.FlyWeight.Tests.FlyweightTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::C4490CAD-7A55-42E7-AEB0-92465BC3BEBC::net9.0::Skaar.FlyWeight.Tests.CodeGenerationTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
