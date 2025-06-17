@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -21,12 +22,13 @@ public class ClassGenerator: IIncrementalGenerator
                 using System;
                 using System.CodeDom.Compiler;
 
+                #pragma warning disable CS0436 // Type may be defined multiple times
                 namespace Skaar.Flyweight;
                 [GeneratedCode("{{toolName}}", "{{version}}")]
                 [System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple = true)]
                 public class GenerateFlyweightClassAttribute : System.Attribute
                 {
-                    public GenerateFlyweightClassAttribute(string name, string @namespace)
+                    public GenerateFlyweightClassAttribute(string fullName)
                     {
                     }
                 }
@@ -45,8 +47,7 @@ public class ClassGenerator: IIncrementalGenerator
                 .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, markerAttr))
                 .Select(attr =>
                 {
-                    var arg = attr.ConstructorArguments;
-                    return (Name: arg[0].Value as string, Namespace: arg[1].Value as string);
+                    return ParseName(attr.ConstructorArguments[0].Value as string);
                 });
         });
         
@@ -75,6 +76,27 @@ public class ClassGenerator: IIncrementalGenerator
                          """;
             productionContext.AddSource($"{args.Namespace}.{args.Name}.g.cs", SourceText.From(source, Encoding.UTF8));
         }));
-        
+    }
+
+    private (string Name, string Namespace) ParseName(string name)
+    {
+        if(string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Name cannot be null or whitespace.");
+        }
+        var indexOfLastDot= name!.LastIndexOf('.');
+        if (indexOfLastDot == -1)
+        {
+            return (Name: name.Trim(), Namespace: "global");
+        }
+
+        if (indexOfLastDot == name.Length - 1)
+        {
+            return ParseName(name.Substring(0, name.Length - 1));
+        }
+        var namePart = name.Substring(indexOfLastDot + 1).Trim();
+        var ns = name.Substring(0, indexOfLastDot).Trim();
+        if (string.IsNullOrEmpty(ns)) ns = "global";
+        return (Name: namePart, Namespace: ns);
     }
 }

@@ -12,7 +12,7 @@ public class AttributeAnalyzer : DiagnosticAnalyzer
     public static readonly DiagnosticDescriptor InvalidAttributeParams = new(
         id: "FLYWEIGHT001",
         title: "Invalid Flyweight Attribute Parameters",
-        messageFormat: "Flyweight attribute parameters must be valid class- and namespace names",
+        messageFormat: "Flyweight attribute parameter must be valid class- and namespace name",
         category: "Usage",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);

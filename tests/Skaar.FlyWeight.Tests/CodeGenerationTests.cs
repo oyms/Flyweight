@@ -1,8 +1,9 @@
+using global;
 using Shouldly;
 using Skaar.Flyweight;
 
-[assembly:GenerateFlyweightClass(nameof(TestNs.TestType), "TestNs")]
-[assembly:GenerateFlyweightClass("Illegalname", "Namespace")]
+[assembly:GenerateFlyweightClass("TestNs.TestType")]
+[assembly:GenerateFlyweightClass(nameof(Illegalname))]
 
 namespace Skaar.FlyWeight.Tests;
 
