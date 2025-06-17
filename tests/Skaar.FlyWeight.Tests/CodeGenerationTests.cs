@@ -2,7 +2,7 @@ using Shouldly;
 using Skaar.Flyweight;
 
 [assembly:GenerateFlyweightClass(nameof(TestNs.TestType), "TestNs")]
-//[assembly:GenerateFlyweightClass("Illegal name", "TestNs")]
+[assembly:GenerateFlyweightClass("Illegalname", "Namespace")]
 
 namespace Skaar.FlyWeight.Tests;
 

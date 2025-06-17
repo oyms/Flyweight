@@ -40,10 +40,6 @@ public class ClassGenerator: IIncrementalGenerator
             var markerAttr = compilation.GetTypeByMetadataName("Skaar.Flyweight.GenerateFlyweightClassAttribute");
             if (markerAttr == null) return [];
             
-            var attributes = compilation.Assembly.GetAttributes()
-                .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, markerAttr))
-                .ToList();
-            
             return compilation.Assembly
                 .GetAttributes()
                 .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, markerAttr))
