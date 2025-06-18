@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skaar.Flyweight", "src\Skaar.Flyweight\Skaar.Flyweight.csproj", "{A1C72912-07EA-465B-B77F-657F53C1D357}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skaar.FlyWeight.Tests", "tests\Skaar.FlyWeight.Tests\Skaar.FlyWeight.Tests.csproj", "{C4490CAD-7A55-42E7-AEB0-92465BC3BEBC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skaar.Flyweight.Tests", "tests\Skaar.Flyweight.Tests\Skaar.Flyweight.Tests.csproj", "{C4490CAD-7A55-42E7-AEB0-92465BC3BEBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skaar.Flyweight.CodeGeneration", "src\Skaar.Flyweight.CodeGeneration\Skaar.Flyweight.CodeGeneration.csproj", "{00631AE9-A8FA-4044-8D21-90600D083E55}"
 EndProject

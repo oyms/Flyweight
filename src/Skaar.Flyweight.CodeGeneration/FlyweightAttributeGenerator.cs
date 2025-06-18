@@ -1,0 +1,58 @@
+using System.Linq;
+using System.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
+
+namespace Skaar.Flyweight;
+
+[Generator]
+public class FlyweightAttributeGenerator : FlyWeightClassGeneratorBase, IIncrementalGenerator
+{
+    public static string AttributeName = "FlyweightAttribute";
+
+    public void Initialize(IncrementalGeneratorInitializationContext context)
+    {
+        context.RegisterPostInitializationOutput(ctx =>
+        {
+            ctx.AddSource("FlyweightAttribute.g.cs", SourceText.From(
+                $$"""
+                  using System;
+                  using System.CodeDom.Compiler;
+
+                  #pragma warning disable CS0436 // Type may be defined multiple times
+                  namespace {{AttributeNamespace}};
+                  [GeneratedCode("{{ToolName}}", "{{ToolVersion}}")]
+                  [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false)]
+                  public class {{AttributeName}} : System.Attribute
+                  {}
+
+                  """, Encoding.UTF8
+            ));
+        });
+
+        var classDeclarations = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                (node, _) => node is ClassDeclarationSyntax cds && cds.AttributeLists.Any(),
+                (ctx, _) =>
+                {
+                    var classSyntax = (ClassDeclarationSyntax)ctx.Node;
+                    var symbol = ctx.SemanticModel.GetDeclaredSymbol(classSyntax);
+                    return symbol;
+                })
+            .Where(s => s is not null && s.GetAttributes()
+                .Any(attr => attr.AttributeClass?.ToDisplayString() == $"{AttributeNamespace}.{AttributeName}")
+            )
+            .Collect();
+
+        context.RegisterSourceOutput(classDeclarations, (productionContext, classSymbols) =>
+        {
+            foreach (var classSymbol in classSymbols)
+            {
+                var className = classSymbol.Name;
+                var ns = classSymbol.ContainingNamespace.ToDisplayString();
+                productionContext.AddSource($"{ns}.{className}.g.cs", GetClassSource(className, ns));
+            }
+        });
+    }
+}

@@ -5,7 +5,7 @@ using Skaar.Flyweight;
 using Skaar.Flyweight.Contracts;
 using Skaar.Flyweight.Serialization;
 
-namespace Skaar.FlyWeight.Tests;
+namespace Skaar.Flyweight.Testss;
 
 public class FlyweightTests
 {
