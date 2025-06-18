@@ -10,7 +10,6 @@
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ddc3d3e4_002Df533_002D4a66_002D9a03_002D9e74fad6861b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="FlyweightTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;xUnit::C4490CAD-7A55-42E7-AEB0-92465BC3BEBC::net9.0::Skaar.FlyWeight.Tests.FlyweightTests&lt;/TestId&gt;
-    &lt;TestId&gt;xUnit::C4490CAD-7A55-42E7-AEB0-92465BC3BEBC::net9.0::Skaar.FlyWeight.Tests.CodeGenerationTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::C4490CAD-7A55-42E7-AEB0-92465BC3BEBC::net9.0::Skaar.Flyweight.Tests.CodeGenerationTests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

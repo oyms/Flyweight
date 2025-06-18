@@ -7,12 +7,12 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Skaar.Flyweight;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class AttributeAnalyzer : DiagnosticAnalyzer
+public class GenerateFlyweightClassAttributeAnalyzer : DiagnosticAnalyzer
 {
-    public static readonly DiagnosticDescriptor InvalidAttributeParams = new(
+    private static readonly DiagnosticDescriptor InvalidAttributeParams = new(
         id: "FLYWEIGHT001",
         title: "Invalid Flyweight Attribute Parameters",
-        messageFormat: "Flyweight attribute parameter must be valid class- and namespace name",
+        messageFormat: $"[{GenerateFlyweightClassAttributeGenerator.AttributeName}] parameter must be valid class- and namespace name",
         category: "Usage",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
@@ -46,7 +46,7 @@ public class AttributeAnalyzer : DiagnosticAnalyzer
         if (symbol == null)
             return;
         var attrType = symbol.ContainingType;
-        if (attrType.ToDisplayString() != "Skaar.Flyweight.GenerateFlyweightClassAttribute")
+        if (attrType.ToDisplayString() != $"{FlyWeightClassGeneratorBase.AttributeNamespace}.{GenerateFlyweightClassAttributeGenerator.AttributeName}")
             return;
 
         // Validate arguments

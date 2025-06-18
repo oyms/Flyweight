@@ -1,9 +1,9 @@
-using global;
+using  global;
 using Shouldly;
 using Skaar.Flyweight;
 
 [assembly: GenerateFlyweightClass("TestNs.TestType")]
-[assembly: GenerateFlyweightClass(nameof(Illegalname))]
+[assembly: GenerateFlyweightClass(nameof(SomeClassName))]
 
 namespace Skaar.Flyweight.Tests;
 
@@ -12,8 +12,8 @@ public class CodeGenerationTests
     [Fact]
     public void GeneratedClass_Equals_WithSameKey_ReturnsTrue()
     {
-        var first = TestNs.TestType.Get("1");
-        var second = TestNs.TestType.Get("1");
+        var first = TestNs.TestType.Get("0");
+        var second = TestNs.TestType.Get("0");
         first.ShouldBe(second);
         (first == second).ShouldBeTrue();
         ReferenceEquals(first, second).ShouldBeTrue();
@@ -33,3 +33,5 @@ public class CodeGenerationTests
 [Flyweight]
 partial class TestType1;
 
+[Flyweight]
+partial class TestType2;

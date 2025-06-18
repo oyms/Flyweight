@@ -7,7 +7,7 @@ namespace Skaar.Flyweight;
 
 public abstract class FlyWeightClassGeneratorBase
 {
-    protected string AttributeNamespace => "Skaar.Flyweight";
+    public static readonly string AttributeNamespace = "Skaar.Flyweight";
     protected string ToolName => Assembly.GetExecutingAssembly().GetName().Name;
     protected Version ToolVersion => Assembly.GetExecutingAssembly().GetName().Version;
 
