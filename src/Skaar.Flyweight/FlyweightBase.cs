@@ -1,9 +1,11 @@
-﻿using Skaar.Flyweight.Contracts;
+﻿using System.Diagnostics.CodeAnalysis;
+using Skaar.Flyweight.Contracts;
 using Skaar.Flyweight.Repository;
 
 namespace Skaar.Flyweight;
 
-public abstract class FlyweightBase<T>(string value) : IComparable<T>
+public abstract class FlyweightBase<T>(string value) : IComparable<T>,
+    IFormattable, IParsable<T>
     where T : FlyweightBase<T>, IFlyweightFactory<T>
 {
     private static readonly FlyWeightRepository<T> Instances = new();
@@ -76,5 +78,19 @@ public abstract class FlyweightBase<T>(string value) : IComparable<T>
     public static bool operator >=(FlyweightBase<T> left, FlyweightBase<T> right)
     {
         return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
+    }
+
+    public virtual string ToString(string? format, IFormatProvider? _ = null) => _value;
+    public static T Parse(string s, IFormatProvider? _ = null) => T.Get(s);
+
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out T result)
+    {
+        if(s == null)
+        {
+            result = null;
+            return false;
+        }
+        result = Parse(s);
+        return true;
     }
 }

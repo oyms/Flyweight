@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Skaar.Flyweight;
+namespace Skaar.Flyweight.Generate;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class GenerateFlyweightClassAttributeAnalyzer : DiagnosticAnalyzer

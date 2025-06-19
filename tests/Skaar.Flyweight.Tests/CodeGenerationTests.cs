@@ -13,7 +13,7 @@ public class CodeGenerationTests
     public void GeneratedClass_Equals_WithSameKey_ReturnsTrue()
     {
         var first = TestNs.TestType.Get("0");
-        var second = TestNs.TestType.Get("0");
+        var second = TestNs.TestType.Parse("0");
         first.ShouldBe(second);
         (first == second).ShouldBeTrue();
         ReferenceEquals(first, second).ShouldBeTrue();
@@ -23,7 +23,7 @@ public class CodeGenerationTests
     public void ExtendedClass_Equals_WithSameKey_ReturnsTrue()
     {
         var first = TestType1.Get("1");
-        var second = TestType1.Get("1");
+        var second = TestType1.Parse("1");
         first.ShouldBe(second);
         (first == second).ShouldBeTrue();
         ReferenceEquals(first, second).ShouldBeTrue();
