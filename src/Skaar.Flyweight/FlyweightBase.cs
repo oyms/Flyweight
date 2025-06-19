@@ -1,14 +1,14 @@
-﻿using System.Collections.Concurrent;
-using Skaar.Flyweight.Contracts;
+﻿using Skaar.Flyweight.Contracts;
+using Skaar.Flyweight.Repository;
 
 namespace Skaar.Flyweight;
 
 public abstract class FlyweightBase<T>(string value) : IComparable<T>
     where T : FlyweightBase<T>, IFlyweightFactory<T>
 {
-    private static readonly ConcurrentDictionary<string, T> Instances = new();
+    private static readonly FlyWeightRepository<T> Instances = new();
     private readonly string _value = value;
-    public static IEnumerable<T> AllValues => Instances.Values;
+    public static IEnumerable<T> AllValues => Instances.AllValues;
     
     public int CompareTo(T? other)
     {
@@ -38,7 +38,7 @@ public abstract class FlyweightBase<T>(string value) : IComparable<T>
 
         return string.Compare(_value, other._value, StringComparison.Ordinal);
     }
-    protected static T Get(string key, Func<string,T> create) => Instances.GetOrAdd(key, create);
+    protected static T Get(string key, Func<string,T> create) => Instances.Get(key, create);
 
     public override string ToString() => _value;
 
