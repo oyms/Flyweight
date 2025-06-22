@@ -13,7 +13,7 @@ public class FlyweightAttributeAnalyzer : DiagnosticAnalyzer
     private static readonly DiagnosticDescriptor InvalidClassModifier = new(
         id: "FLYWEIGHT002",
         title: "Invalid Flyweight Attribute Usage",
-        messageFormat: $"Classes decorated with the [{FlyweightAttributeGenerator.AttributeName}] attribute must be public and partial",
+        messageFormat: $"Classes decorated with the [{FlyweightAttributeGenerator.AttributeName}] attribute must be public or internal, and partial",
         category: "Usage",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);

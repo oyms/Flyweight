@@ -57,7 +57,13 @@ public class FlyweightAttributeGenerator : FlyWeightClassGeneratorBase, IIncreme
             {
                 var className = classSymbol.Name;
                 var ns = classSymbol.ContainingNamespace.ToDisplayString();
-                productionContext.AddSource($"{ns}.{className}.g.cs", GetClassSource(className, ns));
+                var visibility = classSymbol.DeclaredAccessibility switch
+                {
+                    Accessibility.Public => "public ",
+                    Accessibility.Internal => "internal ",
+                    _ => string.Empty
+                };
+                productionContext.AddSource($"{ns}.{className}.g.cs", GetClassSource(className, ns, visibility));
             }
         });
     }

@@ -53,15 +53,13 @@ public class GenerateFlyweightClassAttributeGenerator : FlyWeightClassGeneratorB
             return compilation.Assembly
                 .GetAttributes()
                 .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, markerAttr))
-                .Select(attr =>
-                {
-                    return ParseName(attr.ConstructorArguments[0].Value as string);
-                });
+                .Select(attr => ParseName(attr.ConstructorArguments[0].Value as string))
+                .Distinct();
         });
         
         context.RegisterSourceOutput(markers, ((productionContext, args) =>
         {
-            var source = GetClassSource(args.Name, args.Namespace);
+            var source = GetClassSource(args.Name, args.Namespace, "public ");
             productionContext.AddSource($"{args.Namespace}.{args.Name}.g.cs", source);
         }));
     }

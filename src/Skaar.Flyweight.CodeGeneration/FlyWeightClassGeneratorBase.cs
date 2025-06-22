@@ -11,7 +11,7 @@ public abstract class FlyWeightClassGeneratorBase
     protected string ToolName => Assembly.GetExecutingAssembly().GetName().Name;
     protected Version ToolVersion => Assembly.GetExecutingAssembly().GetName().Version;
 
-    protected SourceText GetClassSource(string className, string @namespace)
+    protected SourceText GetClassSource(string className, string @namespace, string visibility)
     {
         var source = $$"""
                        using System.Diagnostics.CodeAnalysis;
@@ -23,7 +23,7 @@ public abstract class FlyWeightClassGeneratorBase
                        namespace {{@namespace}};
                        [System.CodeDom.Compiler.GeneratedCode("{{ToolName}}", "{{ToolVersion}}")] 
                        [JsonConverter(typeof(FlyweightJsonConverter<{{className}}>))]
-                       public partial class {{className}} : 
+                       {{visibility}}partial class {{className}} : 
                             FlyweightBase<{{className}}>, IFlyweightFactory<{{className}}>
                        {
                            private {{className}}(string key) : base(key)

@@ -3,6 +3,8 @@ using Shouldly;
 using Skaar.Flyweight;
 
 [assembly: GenerateFlyweightClass("TestNs.TestType")]
+[assembly: GenerateFlyweightClass("TestNs.TestType")]
+[assembly: GenerateFlyweightClass("TestNs.Subnamespace.TestType")]
 [assembly: GenerateFlyweightClass(nameof(SomeClassName))]
 
 namespace Skaar.Flyweight.Tests;
