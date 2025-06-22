@@ -22,6 +22,12 @@ public class FlyweightAttributeGenerator : FlyWeightClassGeneratorBase, IIncreme
 
                   #pragma warning disable CS0436 // Type may be defined multiple times
                   namespace {{AttributeNamespace}};
+                  /// <summary>
+                  /// Classes decorated with this attribute will trigger code generation.
+                  /// A partial part of the class will be generated in the same namespace.
+                  /// The part will contain the implementation of the flyweight pattern.
+                  /// </summary>
+                  /// <seealso cref="FlyweightBase{T}"/>
                   [GeneratedCode("{{ToolName}}", "{{ToolVersion}}")]
                   [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false)]
                   public class {{AttributeName}} : System.Attribute

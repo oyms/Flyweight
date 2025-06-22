@@ -97,5 +97,4 @@ Or use the `GenerateFlyweightClassAttribute` to generate a new flyweight class;
 
 ```csharp
 [assembly: GenerateFlyweightClass("MyNamespace.MyFlyweight")]
-[assembly: GenerateFlyweightClass("MyOtherFlyweight", "MyNamespace")]
 ```

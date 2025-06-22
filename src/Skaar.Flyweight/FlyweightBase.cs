@@ -4,12 +4,20 @@ using Skaar.Flyweight.Repository;
 
 namespace Skaar.Flyweight;
 
+/// <summary>
+/// A base class for implementing the Flyweight pattern.
+/// The inner value of the flyweight is a string.
+/// </summary>
+/// <param name="value">The value of the instance.</param>
+/// <typeparam name="T">The type of the flyweight class.</typeparam>
 public abstract class FlyweightBase<T>(string value) : IComparable<T>,
     IFormattable, IParsable<T>
     where T : FlyweightBase<T>, IFlyweightFactory<T>
 {
     private static readonly FlyWeightRepository<T> Instances = new();
     private readonly string _value = value;
+
+    /// <inheritdoc cref="IFlyweightFactory{T}" />
     public static IEnumerable<T> AllValues => Instances.AllValues;
     
     public int CompareTo(T? other)
@@ -40,8 +48,13 @@ public abstract class FlyweightBase<T>(string value) : IComparable<T>,
 
         return string.Compare(_value, other._value, StringComparison.Ordinal);
     }
+    
+    /// <inheritdoc cref="IFlyweightFactory{T}" />
     protected static T Get(string key, Func<string,T> create) => Instances.Get(key, create);
 
+    /// <summary>
+    /// Returns the inner value of this instance.
+    /// </summary>
     public override string ToString() => _value;
 
     public override bool Equals(object? obj) => ReferenceEquals(this, obj);

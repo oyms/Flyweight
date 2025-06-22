@@ -10,6 +10,7 @@
         <PackageTags>Patterns;Flyweight;MemoryOptimization;Model</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <IncludeSource>false</IncludeSource>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PackageProjectUrl>https://github.com/oyms/Flyweight</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -20,6 +21,9 @@
         </PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <IsPackable>true</IsPackable>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
     <ItemGroup>
         <None Include="..\..\resources\logo.png" Pack="true" PackagePath="" />

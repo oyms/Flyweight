@@ -22,10 +22,20 @@ public class GenerateFlyweightClassAttributeGenerator : FlyWeightClassGeneratorB
 
                 #pragma warning disable CS0436 // Type may be defined multiple times
                 namespace {{AttributeNamespace}};
+                /// <summary>
+                /// This attribute will trigger code generation.
+                /// A partial class will be generated in the same namespace.
+                /// The class will implement the flyweight pattern.
+                /// </summary>
+                /// <seealso cref="FlyweightBase{T}"/>
                 [GeneratedCode("{{ToolName}}", "{{ToolVersion}}")]
                 [System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple = true)]
                 public class {{AttributeName}} : System.Attribute
                 {
+                    /// <param name="fullName">
+                    /// The full name of the generated class (namespace and class name).
+                    /// The name must be a valid class name
+                    /// </param>
                     public {{AttributeName}}(string fullName)
                     {
                     }

@@ -4,6 +4,9 @@ using Skaar.Flyweight.Contracts;
 
 namespace Skaar.Flyweight.Serialization;
 
+/// <summary>
+/// A JSON converter that serializes and deserializes flyweight objects.
+/// </summary>
 public class FlyweightJsonConverter<T> : JsonConverter<T> where T:IFlyweightFactory<T>
 {
     public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

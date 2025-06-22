@@ -30,6 +30,7 @@ public class CodeGenerationTests
     }
 }
     
+
 [Flyweight]
 partial class TestType1;
 

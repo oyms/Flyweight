@@ -1,12 +1,10 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Shouldly;
-using Skaar.Flyweight;
 using Skaar.Flyweight.Contracts;
 using Skaar.Flyweight.Serialization;
 
-namespace Skaar.Flyweight.Testss;
+namespace Skaar.Flyweight.Tests;
 
 public class FlyweightTests
 {
