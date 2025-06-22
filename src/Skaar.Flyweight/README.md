@@ -5,11 +5,12 @@ which is used to minimize memory usage by sharing common data among multiple obj
 
 The type wraps a string value. The string values are reused.
 
-It may be used with the Skaar.Flyweight.CodeGeneration library to simplify usage.
+It may be used with the [code generation](https://www.nuget.org/packages/Skaar.Flyweight.CodeGeneration) library 
+to simplify usage.
 
 ## Usage
 
-Create classes that inherits from the `FlyweightBase` class.
+Create classes that inherit from the `FlyweightBase` class.
 
 ```csharp
 using Skaar.Flyweight;
@@ -27,3 +28,7 @@ class MyFlyweight : FlyweightBase<MyFlyweight>, IFlyweightFactory<MyFlyweight>
     }
 }
 ```
+
+[Documentation on GitHub](https://github.com/oyms/Flyweight/blob/main/README.md)
+
+![Icon](https://raw.githubusercontent.com/oyms/Flyweight/refs/heads/main/.idea/.idea.Flyweight/.idea/icon.svg)

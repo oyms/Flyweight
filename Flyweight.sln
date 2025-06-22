@@ -6,6 +6,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skaar.Flyweight.Tests", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skaar.Flyweight.CodeGeneration", "src\Skaar.Flyweight.CodeGeneration\Skaar.Flyweight.CodeGeneration.csproj", "{00631AE9-A8FA-4044-8D21-90600D083E55}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{EC6B5303-1643-4740-8579-E78411933D97}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+		src\CommonProps.targets = src\CommonProps.targets
+		resources\logo.png = resources\logo.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

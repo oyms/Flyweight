@@ -74,11 +74,11 @@ Add the code generation package to your .csproj file:
 ```xml
 <ItemGroup>
   <PackageReference 
-      Include="Skaar.Flyweight.CodeGeneration"
+      Include="Skaar.Flyweight.CodeGeneration" Version="*"
       OutputItemType="Analyzer"
       ReferenceOutputAssembly="false"
   />
-  <PackageReference Include="Skaar.Flyweight" />
+  <PackageReference Include="Skaar.Flyweight" Version="*" />
 </ItemGroup>
 ```
 
@@ -97,4 +97,5 @@ Or use the `GenerateFlyweightClassAttribute` to generate a new flyweight class;
 
 ```csharp
 [assembly: GenerateFlyweightClass("MyNamespace.MyFlyweight")]
+[assembly: GenerateFlyweightClass("MyOtherFlyweight", "MyNamespace")]
 ```

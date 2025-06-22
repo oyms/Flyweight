@@ -3,13 +3,15 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);CS1591;CA1822</NoWarn>
         <AssemblyVersion>$(Version)</AssemblyVersion>
-        <VersionPrefix>0.0.2</VersionPrefix>
+        <VersionPrefix>0.0.3</VersionPrefix>
         <Product>Flyweight</Product>
         <Authors>Skaar</Authors>
+        <Description>A library to implement the flyweight pattern.</Description>
         <PackageTags>Patterns;Flyweight;MemoryOptimization;Model</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <IncludeSource>false</IncludeSource>
-        <RepositoryUrl>https://github.com/oyms/Flyweight</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/oyms/Flyweight</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageIcon>logo.png</PackageIcon>
