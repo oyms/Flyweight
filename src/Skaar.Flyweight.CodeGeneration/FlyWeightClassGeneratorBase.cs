@@ -24,7 +24,7 @@ public abstract class FlyWeightClassGeneratorBase
                        [System.CodeDom.Compiler.GeneratedCode("{{ToolName}}", "{{ToolVersion}}")] 
                        [JsonConverter(typeof(FlyweightJsonConverter<{{className}}>))]
                        {{visibility}}partial class {{className}} : 
-                            FlyweightBase<{{className}}>, IFlyweightFactory<{{className}}>
+                            FlyweightBase<{{className}}>, IFlyweightFactory<{{className}}, string>
                        {
                            private {{className}}(string key) : base(key)
                            {

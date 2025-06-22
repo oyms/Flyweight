@@ -12,12 +12,12 @@ namespace Skaar.Flyweight;
 /// <typeparam name="T">The type of the flyweight class.</typeparam>
 public abstract class FlyweightBase<T>(string value) : IComparable<T>,
     IFormattable, IParsable<T>
-    where T : FlyweightBase<T>, IFlyweightFactory<T>
+    where T : FlyweightBase<T>, IFlyweightFactory<T, string>
 {
     private static readonly FlyWeightRepository<T> Instances = new();
     private readonly string _value = value;
 
-    /// <inheritdoc cref="IFlyweightFactory{T}" />
+    /// <inheritdoc cref="IFlyweightFactory{T, TInner}" />
     public static IEnumerable<T> AllValues => Instances.AllValues;
     
     public int CompareTo(T? other)
@@ -49,7 +49,7 @@ public abstract class FlyweightBase<T>(string value) : IComparable<T>,
         return string.Compare(_value, other._value, StringComparison.Ordinal);
     }
     
-    /// <inheritdoc cref="IFlyweightFactory{T}" />
+    /// <inheritdoc cref="IFlyweightFactory{T, TInner}" />
     protected static T Get(string key, Func<string,T> create) => Instances.Get(key, create);
 
     /// <summary>

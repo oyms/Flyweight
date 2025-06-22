@@ -33,7 +33,7 @@ Create classes that inherit from the `FlyweightBase` class.
 ```csharp
 using Skaar.Flyweight;
 [JsonConverter(typeof(FlyweightJsonConverter<MyFlyweight>))]
-class MyFlyweight : FlyweightBase<MyFlyweight>, IFlyweightFactory<MyFlyweight>
+class MyFlyweight : FlyweightBase<MyFlyweight>, IFlyweightFactory<MyFlyweight, string>
 {
     private MyFlyweight(string key) : base(key)
     {

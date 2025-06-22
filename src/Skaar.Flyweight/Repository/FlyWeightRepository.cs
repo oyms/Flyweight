@@ -10,3 +10,11 @@ internal class FlyWeightRepository<T>
 
     public IEnumerable<T> AllValues => Instances.Values;
 }
+
+internal class FlyWeightRepository<T, TInner> where TInner : notnull
+{
+    private static readonly ConcurrentDictionary<TInner, T> Instances = new();
+    public T Get(TInner key, Func<TInner,T> create) => Instances.GetOrAdd(key, create);
+    public IEnumerable<T> AllValues => Instances.Values;
+    public void Purge(TInner instance) => Instances.Remove(instance, out _);
+}

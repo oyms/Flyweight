@@ -57,7 +57,7 @@ public class FlyweightTests
 }
 
 [JsonConverter(typeof(FlyweightJsonConverter<TestType>))]
-file class TestType : FlyweightBase<TestType>, IFlyweightFactory<TestType>
+file class TestType : FlyweightBase<TestType>, IFlyweightFactory<TestType, string>
 {
     private TestType(string key) : base(key)
     {
