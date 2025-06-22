@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Skaar.Flyweight;
+namespace Skaar.Flyweight.StringBased;
 
 public abstract class FlyWeightClassGeneratorBase
 {

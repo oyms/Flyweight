@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Skaar.Flyweight.Extend;
+namespace Skaar.Flyweight.StringBased.Extend;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class FlyweightAttributeAnalyzer : DiagnosticAnalyzer

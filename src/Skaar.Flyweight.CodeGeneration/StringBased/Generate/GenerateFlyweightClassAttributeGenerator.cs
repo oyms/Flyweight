@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Skaar.Flyweight.Generate;
+namespace Skaar.Flyweight.StringBased.Generate;
 
 [Generator]
 public class GenerateFlyweightClassAttributeGenerator : FlyWeightClassGeneratorBase, IIncrementalGenerator

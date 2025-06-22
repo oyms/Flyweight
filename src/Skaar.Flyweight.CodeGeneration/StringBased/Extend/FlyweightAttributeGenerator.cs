@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-namespace Skaar.Flyweight.Extend;
+namespace Skaar.Flyweight.StringBased.Extend;
 
 [Generator]
 public class FlyweightAttributeGenerator : FlyWeightClassGeneratorBase, IIncrementalGenerator
