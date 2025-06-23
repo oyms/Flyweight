@@ -48,9 +48,7 @@ public abstract class FlyweightBase<T, TInner>(TInner value)
     }
 
     /// <summary>
-    /// This will remove this instance from the inner repository.
-    /// This will cause the instance to be garbage collected if there are no other references to it.
-    /// When <see cref="Get"/> is called with the same key again, a new instance will be created.
+    /// Removes all orphaned (garbage-collected) instances from the repository.
     /// </summary>
-    public void Detach() => Instances.Purge(_value);
+    public static void Purge() => Instances.Purge();
 }

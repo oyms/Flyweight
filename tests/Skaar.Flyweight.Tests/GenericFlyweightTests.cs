@@ -35,16 +35,7 @@ public class GenericFlyweightTests
         ValueType value = target;
         value.ShouldBe(input);
     }
-
-    [Fact]
-    public void Detach_WhenNewValueIsCreated_RetunsNewInstance()
-    {
-        var first = TestType.Get(new(true, 1));
-        first.Detach();
-        var second = TestType.Get(new(true, 1));
-        (first != second).ShouldBeTrue();
-        ReferenceEquals(first, second).ShouldBeFalse();
-    }
+    
     [Fact]
     public void Serialization_WithSameValue_ReturnsSameInstance()
     {
