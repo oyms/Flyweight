@@ -49,6 +49,50 @@ public class GenerateFlyweightClassAttributeGenerator : FlyWeightClassGeneratorB
                 
                 """, Encoding.UTF8
                 ));
+            
+            var markers = context.CompilationProvider.SelectMany((compilation, _) =>
+            {
+                var markerAttr = compilation.GetTypeByMetadataName($"{AttributeNamespace}.{AttributeName}`1");
+                if (markerAttr == null) return [];
+            
+                return compilation.Assembly
+                    .GetAttributes()
+                    .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass?.ConstructedFrom, markerAttr))
+                    .Select(attr => new
+                    {
+                        TypeArg = attr.AttributeClass?.TypeArguments.First(),
+                        Name = ParseName(attr.ConstructorArguments[0].Value as string)
+                    })
+                    .Distinct();
+            });
+        
+            context.RegisterSourceOutput(markers, ((productionContext, args) =>
+            {
+                var source = GetClassSource(args.Name, args.Namespace, "public ");
+                productionContext.AddSource($"{args.Namespace}.{args.Name}.g.cs", source);
+            }));
+            
         });
+    }
+    private (string Name, string Namespace) ParseName(string name)
+    {
+        if(string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Name cannot be null or whitespace.");
+        }
+        var indexOfLastDot= name!.LastIndexOf('.');
+        if (indexOfLastDot == -1)
+        {
+            return (Name: name.Trim(), Namespace: "global");
+        }
+
+        if (indexOfLastDot == name.Length - 1)
+        {
+            return ParseName(name.Substring(0, name.Length - 1));
+        }
+        var namePart = name.Substring(indexOfLastDot + 1).Trim();
+        var ns = name.Substring(0, indexOfLastDot).Trim();
+        if (string.IsNullOrEmpty(ns)) ns = "global";
+        return (Name: namePart, Namespace: ns);
     }
 }

@@ -3,8 +3,19 @@ Flyweight model
 
 <img alt="icon" style="width: 200px;" src="./resources/logo.svg" />
 
+```csharp
+[Flyweight]
+partial class MyFlyweight;
+
+var a = MyFlyweight.Get("some string");
+var b = MyFlyweight.Get("some string");
+
+Console.WriteLine(ReferenceEquals(a, b)); // True, both refer to the same instance
+```
+
 This is a library for reusing models to save memory.
-This is useful when you have a lot of similar models.
+This is useful when you have a lot of similar models. For instance, when dezerializing large JSON data
+where the same string values are repeated many times, or when you have a lot of enum-like values.
 
 The models can act like enum values, in the sense that
 they can be enumerated over every possible value.
