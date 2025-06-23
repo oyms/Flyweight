@@ -66,11 +66,7 @@ public class GenerateFlyweightClassAttributeGenerator : FlyWeightClassGeneratorB
                     .Distinct();
             });
         
-            context.RegisterSourceOutput(markers, ((productionContext, args) =>
-            {
-                var source = GetClassSource(args.Name, args.Namespace, "public ");
-                productionContext.AddSource($"{args.Namespace}.{args.Name}.g.cs", source);
-            }));
+           //TODO: Generate classes
             
         });
     }
