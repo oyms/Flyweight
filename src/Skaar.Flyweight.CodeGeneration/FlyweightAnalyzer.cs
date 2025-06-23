@@ -1,29 +1,38 @@
 using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace Skaar.Flyweight.StringBased.Generate;
+namespace Skaar.Flyweight;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class GenerateFlyweightClassAttributeAnalyzer : DiagnosticAnalyzer
+public class FlyweightAnalyzer : DiagnosticAnalyzer
 {
+    private static readonly DiagnosticDescriptor InvalidClassModifier = new(
+        id: "FLYWEIGHT002",
+        title: "Invalid Flyweight Attribute Usage",
+        messageFormat: $"Classes decorated with the [{FlyweightGenerator.ExtendAttributeName}] attribute must be public or internal, and partial",
+        category: "Usage",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
     private static readonly DiagnosticDescriptor InvalidAttributeParams = new(
         id: "FLYWEIGHT001",
         title: "Invalid Flyweight Attribute Parameters",
-        messageFormat: $"[{GenerateFlyweightClassAttributeGenerator.AttributeName}] parameter must be valid class- and namespace name",
+        messageFormat: $"[{FlyweightGenerator.GenerateAttributeName}] parameter must be valid class- and namespace name",
         category: "Usage",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(InvalidAttributeParams);
+        ImmutableArray.Create(InvalidClassModifier, InvalidAttributeParams);
 
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
         context.EnableConcurrentExecution();
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
+        context.RegisterSyntaxNodeAction(AnalyzeDecoratedClass, SyntaxKind.ClassDeclaration);
         context.RegisterCompilationStartAction(startContext =>
         {
             startContext.RegisterSyntaxNodeAction(
@@ -31,7 +40,37 @@ public class GenerateFlyweightClassAttributeAnalyzer : DiagnosticAnalyzer
                 SyntaxKind.Attribute);
         });
     }
+    
+    private void AnalyzeDecoratedClass(SyntaxNodeAnalysisContext context)
+    {
+        var classDecl = (ClassDeclarationSyntax)context.Node;
 
+        if (!classDecl.AttributeLists.Any())
+            return;
+
+        var model = context.SemanticModel;
+        var symbol = model.GetDeclaredSymbol(classDecl);
+        if (symbol == null)
+            return;
+
+        var hasFlyweightAttribute = symbol.GetAttributes()
+            .Any(attr => attr.AttributeClass?.ToDisplayString() == $"{FlyweightGenerator.AttributeNamespace}.{FlyweightGenerator.ExtendAttributeName}");
+        if (!hasFlyweightAttribute)
+            return;
+
+        var isPublicOrInternal = symbol.DeclaredAccessibility == Accessibility.Public ||
+                                 symbol.DeclaredAccessibility == Accessibility.Internal;
+
+        var isPartial = classDecl.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
+
+        if (!isPublicOrInternal || !isPartial)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(
+                InvalidClassModifier,
+                classDecl.Identifier.GetLocation()
+            ));
+        }
+    }
     private void AnalyzeAttribute(SyntaxNodeAnalysisContext context)
     {
         var attributeSyntax = (AttributeSyntax)context.Node;
@@ -46,7 +85,7 @@ public class GenerateFlyweightClassAttributeAnalyzer : DiagnosticAnalyzer
         if (symbol == null)
             return;
         var attrType = symbol.ContainingType;
-        if (attrType.ToDisplayString() != $"{FlyWeightClassGeneratorBase.AttributeNamespace}.{GenerateFlyweightClassAttributeGenerator.AttributeName}")
+        if (attrType.ToDisplayString() != $"{FlyweightGenerator.AttributeNamespace}.{FlyweightGenerator.GenerateAttributeName}")
             return;
 
         // Validate arguments
