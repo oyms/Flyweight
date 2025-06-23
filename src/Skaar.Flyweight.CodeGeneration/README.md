@@ -12,11 +12,7 @@ In the `.csproj` file, add the following:
 
 ```xml
 <ItemGroup>
-  <PackageReference 
-      Include="Skaar.Flyweight.CodeGeneration" Version="*"
-      OutputItemType="Analyzer"
-      ReferenceOutputAssembly="false"
-  />
+  <PackageReference Include="Skaar.Flyweight.CodeGeneration" Version="*" />
   <PackageReference Include="Skaar.Flyweight" Version="*" />
 </ItemGroup>
 ```
@@ -29,13 +25,20 @@ Add the `Flyweight` attribute to a partial class that you want to use as a flywe
 
 using Skaar.Flyweight;
 [Flyweight] 
-public partial class MyFlyweight;
+partial class MyStringBasedFlyweight;
+
+[Flyweight<DataType>] 
+partial class MyDataTypeBasedFlyweight;
+
+public record DataType(int Value);
 ```
 
 Or use the `GenerateFlyweightClassAttribute` to generate a new flyweight class;
 
 ```csharp
-[assembly: GenerateFlyweightClass("MyNamespace.MyFlyweight")]
+[assembly: GenerateFlyweightClass("MyNamespace.MyStringBasedFlyweight")]
+//or
+[assembly: GenerateFlyweightClass<DataType>("MyNamespace.MyDataTypeBasedFlyweight")]
 ```
 
 [Documentation on GitHub](https://github.com/oyms/Flyweight/blob/main/README.md)

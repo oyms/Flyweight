@@ -13,14 +13,14 @@ public class FlyweightAnalyzer : DiagnosticAnalyzer
     private static readonly DiagnosticDescriptor InvalidClassModifier = new(
         id: "FLYWEIGHT002",
         title: "Invalid Flyweight Attribute Usage",
-        messageFormat: $"Classes decorated with the [{FlyweightGenerator.ExtendAttributeName}] attribute must be public or internal, and partial",
+        messageFormat: $"Classes decorated with the [{Generator.ExtendAttributeName}] attribute must be public or internal, and partial",
         category: "Usage",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
     private static readonly DiagnosticDescriptor InvalidAttributeParams = new(
         id: "FLYWEIGHT001",
         title: "Invalid Flyweight Attribute Parameters",
-        messageFormat: $"[{FlyweightGenerator.GenerateAttributeName}] parameter must be valid class- and namespace name",
+        messageFormat: $"[{Generator.GenerateAttributeName}] parameter must be valid class- and namespace name",
         category: "Usage",
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
@@ -54,7 +54,7 @@ public class FlyweightAnalyzer : DiagnosticAnalyzer
             return;
 
         var hasFlyweightAttribute = symbol.GetAttributes()
-            .Any(attr => attr.AttributeClass?.ToDisplayString() == $"{FlyweightGenerator.AttributeNamespace}.{FlyweightGenerator.ExtendAttributeName}");
+            .Any(attr => attr.AttributeClass?.ToDisplayString() == $"{Generator.AttributeNamespace}.{Generator.ExtendAttributeName}");
         if (!hasFlyweightAttribute)
             return;
 
@@ -85,7 +85,7 @@ public class FlyweightAnalyzer : DiagnosticAnalyzer
         if (symbol == null)
             return;
         var attrType = symbol.ContainingType;
-        if (attrType.ToDisplayString() != $"{FlyweightGenerator.AttributeNamespace}.{FlyweightGenerator.GenerateAttributeName}")
+        if (attrType.ToDisplayString() != $"{Generator.AttributeNamespace}.{Generator.GenerateAttributeName}")
             return;
 
         // Validate arguments

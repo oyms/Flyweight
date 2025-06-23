@@ -17,6 +17,19 @@ public class GenericCodeGenerationTests
         ReferenceEquals(first, second).ShouldBeTrue();
         first.GetInnerValue().Value.ShouldBe(0);
     }
+    
+    [Fact]
+    public void ExtendedClass_Equals_WithSameKey_ReturnsTrue()
+    {
+        var first = TestType3.Get(new(1));
+        var second = TestType3.Get(new(1));
+        first.ShouldBe(second);
+        (first == second).ShouldBeTrue();
+        ReferenceEquals(first, second).ShouldBeTrue();
+    }
 }
 
 public record TestValue(int Value);
+
+[Flyweight<TestValue>]
+partial class TestType3;

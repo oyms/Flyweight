@@ -59,6 +59,30 @@ class ClassTemplates
 
                  """;
     }    
+    
+    public string Generic1ExtendAttribute(string className, string @namespace)
+    {
+        return $$"""
+                 using System;
+                 using System.CodeDom.Compiler;
+
+                 #pragma warning disable CS0436 // Type may be defined multiple times
+                 namespace {{@namespace}};
+                 /// <summary>
+                 /// Classes decorated with this attribute will trigger code generation.
+                 /// A partial part of the class will be generated in the same namespace.
+                 /// The part will contain the implementation of the flyweight pattern.
+                 /// </summary>
+                 /// <typeparam name="T">The type of the inner value</typeparam>
+                 /// <seealso cref="FlyweightBase{T}"/>
+                 [GeneratedCode("{{ToolName}}", "{{ToolVersion}}")]
+                 [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false)]
+                 public class {{className}}<T> : System.Attribute where T : class
+                 {}
+
+                 """;
+    }
+    
     public string Generic1GenerateAttribute(string className, string @namespace)
     {
         return $$"""

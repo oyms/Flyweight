@@ -9,7 +9,7 @@ using Skaar.Flyweight.Templates;
 namespace Skaar.Flyweight;
 
 [Generator]
-public class FlyweightGenerator : IIncrementalGenerator
+public class Generator : IIncrementalGenerator
 {
     public static readonly string ExtendAttributeName = "FlyweightAttribute";
     public static readonly string GenerateAttributeName = "GenerateFlyweightClassAttribute";
@@ -22,16 +22,69 @@ public class FlyweightGenerator : IIncrementalGenerator
 
         GenerateStringBasedClassExtensionFiles(context, templates);
         GenerateStringBasedCreatedClassFiles(context, templates);
+        GenerateGenericBasedClassExtensionFiles(context, templates);
         GenerateGenericBasedCreatedClassFiles(context, templates);
     }
 
-    private void GenerateGenericBasedCreatedClassFiles(IncrementalGeneratorInitializationContext context, ClassTemplates templates)
+    private void GenerateGenericBasedClassExtensionFiles(IncrementalGeneratorInitializationContext context, ClassTemplates templates)
+    {
+        var classAndGenericType = context.SyntaxProvider
+            .CreateSyntaxProvider<(ISymbol Class, ITypeSymbol TypeArg)?>(
+                (node, _) => node is ClassDeclarationSyntax cds && cds.AttributeLists.Any(),
+                (ctx, _) =>
+                {
+                    var classSyntax = (ClassDeclarationSyntax)ctx.Node;
+                    var symbol = ctx.SemanticModel.GetDeclaredSymbol(classSyntax);
+                    if (symbol is null)
+                        return null;
+
+                    var genericAttr = symbol.GetAttributes()
+                        .FirstOrDefault(attr =>
+                            attr.AttributeClass is not null && 
+                            attr.AttributeClass.IsGenericType && 
+                            attr.AttributeClass.Name == ExtendAttributeName && attr.AttributeClass.Arity == 1
+                            && attr.AttributeClass.ContainingNamespace.ToDisplayString() == AttributeNamespace
+                        );
+
+                    if (genericAttr is null)
+                        return null;
+
+                    var typeArg = genericAttr.AttributeClass!.TypeArguments.First();
+
+                    return (Class: symbol, TypeArg: typeArg);
+                })
+            .Where(x => x is not null)
+            .Collect();
+
+        context.RegisterSourceOutput(classAndGenericType, (productionContext, items) =>
+        {
+            foreach (var maybeNull in items)
+            {
+                if(maybeNull is not {} tuple) continue;
+                var (classSymbol, typeArg) = tuple;
+                var className = classSymbol.Name;
+                var ns = classSymbol.ContainingNamespace.ToDisplayString();
+                var visibility = classSymbol.DeclaredAccessibility switch
+                {
+                    Accessibility.Public => "public ",
+                    Accessibility.Internal => "internal ",
+                    _ => string.Empty
+                };
+
+                productionContext.AddSource($"{ns}.{className}.{typeArg.ToDisplayString()}.g.cs",
+                    templates.TypeBasedClass(className, ns, visibility, typeArg.ToDisplayString()));
+            }
+        });
+    }
+
+    private void GenerateGenericBasedCreatedClassFiles(IncrementalGeneratorInitializationContext context,
+        ClassTemplates templates)
     {
         var markers = context.CompilationProvider.SelectMany((compilation, _) =>
         {
             var markerAttr = compilation.GetTypeByMetadataName($"{AttributeNamespace}.{GenerateAttributeName}`1");
             if (markerAttr == null) return [];
-            
+
             return compilation.Assembly
                 .GetAttributes()
                 .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass?.ConstructedFrom, markerAttr))
@@ -42,11 +95,13 @@ public class FlyweightGenerator : IIncrementalGenerator
                 })
                 .Distinct();
         });
-        
+
         context.RegisterSourceOutput(markers, ((productionContext, args) =>
         {
-            var source = templates.TypeBasedClass(args.Name.Name, args.Name.Namespace, "public ", args.TypeArg.ToDisplayString());
-            productionContext.AddSource($"{GenerateAttributeName}.{args.TypeArg.Name}.{args.Name.Name}.g.cs", SourceText.From(source, Encoding.UTF8));
+            var source = templates.TypeBasedClass(args.Name.Name, args.Name.Namespace, "public ",
+                args.TypeArg.ToDisplayString());
+            productionContext.AddSource($"{GenerateAttributeName}.{args.TypeArg.Name}.{args.Name.Name}.g.cs",
+                SourceText.From(source, Encoding.UTF8));
         }));
     }
 
@@ -57,7 +112,7 @@ public class FlyweightGenerator : IIncrementalGenerator
         {
             var markerAttr = compilation.GetTypeByMetadataName($"{AttributeNamespace}.{GenerateAttributeName}");
             if (markerAttr == null) return [];
-            
+
             return compilation.Assembly
                 .GetAttributes()
                 .Where(attr => SymbolEqualityComparer.Default.Equals(attr.AttributeClass, markerAttr))
@@ -101,12 +156,14 @@ public class FlyweightGenerator : IIncrementalGenerator
                     Accessibility.Internal => "internal ",
                     _ => string.Empty
                 };
-                productionContext.AddSource($"{ns}.{className}.g.cs", templates.StringBasedClass(className, ns, visibility));
+                productionContext.AddSource($"{ns}.{className}.g.cs",
+                    templates.StringBasedClass(className, ns, visibility));
             }
         });
     }
 
-    private static void GenerateAttributeFiles(IncrementalGeneratorInitializationContext context, ClassTemplates templates)
+    private static void GenerateAttributeFiles(IncrementalGeneratorInitializationContext context,
+        ClassTemplates templates)
     {
         context.RegisterPostInitializationOutput(ctx =>
         {
@@ -119,7 +176,13 @@ public class FlyweightGenerator : IIncrementalGenerator
             ctx.AddSource($"{GenerateAttributeName}.g.cs", SourceText.From(
                 templates.NonGenericGenerateAttribute(GenerateAttributeName, AttributeNamespace), Encoding.UTF8
             ));
-        });        
+        });
+        context.RegisterPostInitializationOutput(ctx =>
+        {
+            ctx.AddSource($"{ExtendAttributeName}.generic.g.cs", SourceText.From(
+                templates.Generic1ExtendAttribute(ExtendAttributeName, AttributeNamespace), Encoding.UTF8
+            ));
+        });
         context.RegisterPostInitializationOutput(ctx =>
         {
             ctx.AddSource($"{GenerateAttributeName}.generic.g.cs", SourceText.From(
@@ -127,13 +190,15 @@ public class FlyweightGenerator : IIncrementalGenerator
             ));
         });
     }
+
     private (string Name, string Namespace) ParseName(string name)
     {
-        if(string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException("Name cannot be null or whitespace.");
         }
-        var indexOfLastDot= name!.LastIndexOf('.');
+
+        var indexOfLastDot = name!.LastIndexOf('.');
         if (indexOfLastDot == -1)
         {
             return (Name: name.Trim(), Namespace: "global");
@@ -143,6 +208,7 @@ public class FlyweightGenerator : IIncrementalGenerator
         {
             return ParseName(name.Substring(0, name.Length - 1));
         }
+
         var namePart = name.Substring(indexOfLastDot + 1).Trim();
         var ns = name.Substring(0, indexOfLastDot).Trim();
         if (string.IsNullOrEmpty(ns)) ns = "global";

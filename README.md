@@ -14,18 +14,20 @@ Console.WriteLine(ReferenceEquals(a, b)); // True, both refer to the same instan
 ```
 
 This is a library for reusing models to save memory.
-This is useful when you have a lot of similar models. For instance, when dezerializing large JSON data
+This is useful when you have a lot of similar models. For instance, when deserializing large JSON data
 where the same string values are repeated many times, or when you have a lot of enum-like values.
 
 The models can act like enum values, in the sense that
 they can be enumerated over every possible value.
 
+[![Static Badge](https://img.shields.io/badge/Wikipedia-Flyweight_Design_Pattern-blue?label=Wikipedia&link=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFlyweight_pattern)](https://en.wikipedia.org/wiki/Flyweight_pattern)
+
 ## Flyweight library
 
 [![NuGet Version](https://img.shields.io/nuget/v/Skaar.Flyweight.svg)](https://www.nuget.org/packages/Skaar.Flyweight) 
 
-This library contains a base class for the flyweight model, wrapping a string value.
-The models are reused, so the same string value will not be stored multiple times.
+This library contains a base class for the flyweight model, wrapping an inner value.
+The models are reused, so the same inner value will not be stored multiple times.
 
 It can be used with the [`Skaar.Flyweight.CodeGeneration`](#code-generator) library to simplify usage.
 
@@ -40,6 +42,8 @@ dotnet add package Skaar.Flyweight
 ### Usage
 
 Create classes that inherit from the `FlyweightBase` class.
+
+For strings:
 
 ```csharp
 using Skaar.Flyweight;
@@ -57,10 +61,31 @@ class MyFlyweight : FlyweightBase<MyFlyweight>, IFlyweightFactory<MyFlyweight, s
 }
 ```
 
+For other types:
+
+```csharp
+using Skaar.Flyweight;
+
+[JsonConverter(typeof(FlyweightJsonConverter<MyFlyweight>))]
+class MyFlyweight : FlyweightBase<MyFlyweight, ValueType>, IFlyweightFactory<MyFlyweight, ValueType>
+{
+    private MyFlyweight(ValueType key) : base(key)
+    {
+    }
+
+    public static MyFlyweight Get(ValueType key)
+    {
+        return Get(key, value => new MyFlyweight(value));
+    }
+}
+
+record ValueType(bool BoolValue, int IntValue);
+```
+
 To get an instance (outside JSON serialization), you can use the `Get` method:
 
 ```csharp
-var myFlyweight = MyFlyweight.Get("myKey");
+var myFlyweight = MyFlyweight.Get(myValue);
 ```
 
 To get all instances of the flyweight, you can use the `GetAll` method:
@@ -80,16 +105,12 @@ This library generates code for the flyweight model.
 
 ### Installation
 
-Add the code generation package to your .csproj file:
+Add both the code generation package and the Flyweight library to your .csproj file:
 
 ```xml
 <ItemGroup>
-  <PackageReference 
-      Include="Skaar.Flyweight.CodeGeneration" Version="*"
-      OutputItemType="Analyzer"
-      ReferenceOutputAssembly="false"
-  />
-  <PackageReference Include="Skaar.Flyweight" Version="*" />
+    <PackageReference Include="Skaar.Flyweight" Version="*" />
+    <PackageReference Include="Skaar.Flyweight.CodeGeneration" Version="*" />
 </ItemGroup>
 ```
 
@@ -97,15 +118,27 @@ Add the code generation package to your .csproj file:
 
 Add the `Flyweight` attribute to a partial class that you want to use as a flyweight.
 
-```csharp
+For strings:
 
+```csharp
 using Skaar.Flyweight;
 [Flyweight] 
 public partial class MyFlyweight;
 ```
 
+For other types:
+
+```csharp
+using Skaar.Flyweight;
+[Flyweight<DataType>] 
+public partial class MyFlyweight;
+public record DataType;
+```
+
+
 Or use the `GenerateFlyweightClassAttribute` to generate a new flyweight class;
 
 ```csharp
-[assembly: GenerateFlyweightClass("MyNamespace.MyFlyweight")]
+[assembly: GenerateFlyweightClass("MyNamespace.MyFlyweight")] // for strings
+[assembly: GenerateFlyweightClass<DataType>("MyNamespace.MyOtherFlyweight")]
 ```
