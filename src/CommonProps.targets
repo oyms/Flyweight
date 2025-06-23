@@ -3,11 +3,11 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);CS1591;CA1822</NoWarn>
         <AssemblyVersion>$(Version)</AssemblyVersion>
-        <VersionPrefix>0.0.5</VersionPrefix>
+        <VersionPrefix>1.0.0</VersionPrefix>
         <Product>Flyweight</Product>
         <Authors>Skaar</Authors>
         <Description>A library to implement the flyweight pattern.</Description>
-        <PackageTags>Patterns;Flyweight;MemoryOptimization;Model</PackageTags>
+        <PackageTags>Patterns;Flyweight;MemoryOptimization;Model;JSON</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <IncludeSource>false</IncludeSource>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
