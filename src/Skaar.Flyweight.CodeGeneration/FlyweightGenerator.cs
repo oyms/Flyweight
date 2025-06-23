@@ -42,6 +42,12 @@ public class FlyweightGenerator : IIncrementalGenerator
                 })
                 .Distinct();
         });
+        
+        context.RegisterSourceOutput(markers, ((productionContext, args) =>
+        {
+            var source = templates.TypeBasedClass(args.Name.Name, args.Name.Namespace, "public ", args.TypeArg.ToDisplayString());
+            productionContext.AddSource($"{GenerateAttributeName}.{args.TypeArg.Name}.{args.Name.Name}.g.cs", SourceText.From(source, Encoding.UTF8));
+        }));
     }
 
     private void GenerateStringBasedCreatedClassFiles(IncrementalGeneratorInitializationContext context,

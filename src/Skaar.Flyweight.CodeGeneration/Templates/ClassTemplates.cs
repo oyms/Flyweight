@@ -120,5 +120,32 @@ class ClassTemplates
            }
            """;
         return source;
+    }    
+    public string TypeBasedClass(string className, string @namespace, string visibility, string innerValueType)
+    {
+        var source = $$"""
+           using System.Diagnostics.CodeAnalysis;
+           using System.Text.Json.Serialization;
+           using Skaar.Flyweight;
+           using Skaar.Flyweight.Contracts;
+           using Skaar.Flyweight.Serialization;
+
+           namespace {{@namespace}};
+           [System.CodeDom.Compiler.GeneratedCode("{{ToolName}}", "{{ToolVersion}}")] 
+           [JsonConverter(typeof(FlyweightJsonConverter<{{className}}, {{innerValueType}}>))]
+           {{visibility}}partial class {{className}} : 
+                FlyweightBase<{{className}}, {{innerValueType}}>, IFlyweightFactory<{{className}}, {{innerValueType}}>
+           {
+               private {{className}}({{innerValueType}} key) : base(key)
+               {
+               }
+               
+               public static {{className}} Get({{innerValueType}} key)
+               {
+                   return Get(key, value => new {{className}}(value));
+               }
+           }
+           """;
+        return source;
     }
 }

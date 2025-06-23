@@ -10,7 +10,8 @@ namespace Skaar.Flyweight;
 /// </summary>
 /// <param name="value">The value of the instance.</param>
 /// <typeparam name="T">The type of the flyweight class.</typeparam>
-public abstract class FlyweightBase<T>(string value) : IComparable<T>,
+public abstract class FlyweightBase<T>(string value) : 
+    IHasInnerValue<string>, IComparable<T>,
     IFormattable, IParsable<T>
     where T : FlyweightBase<T>, IFlyweightFactory<T, string>
 {
@@ -56,6 +57,9 @@ public abstract class FlyweightBase<T>(string value) : IComparable<T>,
     /// Returns the inner value of this instance.
     /// </summary>
     public override string ToString() => _value;
+
+    /// <inheritdoc cref="IHasInnerValue{TInner}.GetInnerValue"/>
+    public string GetInnerValue() => _value;
 
     public override bool Equals(object? obj) => ReferenceEquals(this, obj);
 
