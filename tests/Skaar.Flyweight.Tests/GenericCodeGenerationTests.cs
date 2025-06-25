@@ -27,6 +27,18 @@ public class GenericCodeGenerationTests
         (first == second).ShouldBeTrue();
         ReferenceEquals(first, second).ShouldBeTrue();
     }
+
+    [Fact]
+    public void Get_WithFactoryAndPredicate_ReturnsSameInstance()
+    {
+        var predicate = new Predicate<TestValue>(v => v.Value == 2);
+        var factory = () => new TestValue(2);
+        
+        var first = TestType3.Get(predicate, factory);
+        var second = TestType3.Get(predicate, factory);
+        
+        first.ShouldBe(second);
+    }
 }
 
 public record TestValue(int Value);

@@ -137,10 +137,9 @@ class ClassTemplates
                {
                }
                
-               public static {{className}} Get(string key)
-               {
-                   return Get(key, value => new {{className}}(value));
-               }
+               public static {{className}} Get(string key) => GetOrCreate(key, value => new {{className}}(value));
+               
+               public static {{className}} Get(Predicate<string> predicate, Func<string> factory) => GetOrCreate(predicate, () => new {{className}}(factory()));
            }
            """;
         return source;
@@ -164,10 +163,8 @@ class ClassTemplates
                {
                }
                
-               public static {{className}} Get({{innerValueType}} key)
-               {
-                   return Get(key, value => new {{className}}(value));
-               }
+               public static {{className}} Get({{innerValueType}} key) => GetOrCreate(key, value => new {{className}}(value));
+               public static {{className}} Get(Predicate<{{innerValueType}}> predicate, Func<{{innerValueType}}> factory) => GetOrCreate(predicate, () => new {{className}}(factory()));   
            }
            """;
         return source;

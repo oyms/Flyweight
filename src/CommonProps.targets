@@ -3,7 +3,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);CS1591;CA1822</NoWarn>
         <AssemblyVersion>$(Version)</AssemblyVersion>
-        <VersionPrefix>1.0.0</VersionPrefix>
+        <VersionPrefix>1.1.0</VersionPrefix>
         <Product>Flyweight</Product>
         <Authors>Skaar</Authors>
         <Description>A library to implement the flyweight pattern.</Description>
@@ -18,6 +18,7 @@
         <PackageIcon>logo.png</PackageIcon>
         <PackageReleaseNotes>
             1.0.0: Initial.
+            1.1.0: Get with predicate and factory.
         </PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <IsPackable>true</IsPackable>

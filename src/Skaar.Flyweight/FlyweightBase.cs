@@ -50,9 +50,16 @@ public abstract class FlyweightBase<T>(string value) :
         return string.Compare(_value, other._value, StringComparison.Ordinal);
     }
     
-    /// <inheritdoc cref="IFlyweightFactory{T, TInner}" />
-    protected static T Get(string key, Func<string,T> create) => Instances.Get(key, create);
+    /// <summary>
+    /// Gets or creates an instance of the flyweight type based on the inner value.
+    /// </summary>
+    protected static T GetOrCreate(string key, Func<string,T> create) => Instances.Get(key, create);
 
+    /// <summary>
+    /// Gets or creates an instance of the flyweight type based on the inner value.
+    /// </summary>
+    protected static T GetOrCreate(Predicate<string> predicate, Func<T> factory) => Instances.Get(predicate, factory);
+    
     /// <summary>
     /// Returns the inner value of this instance.
     /// </summary>

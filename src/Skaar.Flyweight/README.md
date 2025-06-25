@@ -24,10 +24,8 @@ class MyFlyweight : FlyweightBase<MyFlyweight>, IFlyweightFactory<MyFlyweight, s
     {
     }
 
-    public static MyFlyweight Get(string key)
-    {
-        return Get(key, value => new MyFlyweight(value));
-    }
+    public static MyFlyweight Get(string key) => GetOrCreate(key, value => new MyFlyweight(value));
+    public static MyFlyweight Get(Predicate<string> predicate, Func<string> factory) => GetOrCreate(predicate, () => new MyFlyweight(factory()));
 }
 ```
 
@@ -42,11 +40,9 @@ class MyFlyweight : FlyweightBase<MyFlyweight, ValueType>, IFlyweightFactory<MyF
     private MyFlyweight(ValueType key) : base(key)
     {
     }
-
-    public static MyFlyweight Get(ValueType key)
-    {
-        return Get(key, value => new MyFlyweight(value));
-    }
+    
+    public static MyFlyweight Get(ValueType key) => GetOrCreate(key, value => new MyFlyweight(value));
+    public static MyFlyweight Get(Predicate<ValueType> predicate, Func<ValueType> factory) => GetOrCreate(predicate, () => new TestType(factory()));
 }
 
 record ValueType(bool BoolValue, int IntValue);

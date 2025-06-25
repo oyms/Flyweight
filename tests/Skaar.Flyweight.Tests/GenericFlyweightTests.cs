@@ -73,7 +73,12 @@ file class TestType : FlyweightBase<TestType, ValueType>, IFlyweightFactory<Test
 
     public static TestType Get(ValueType key)
     {
-        return Get(key, value => new TestType(value));
+        return GetOrCreate(key, value => new TestType(value));
+    }
+
+    public static TestType Get(Predicate<ValueType> predicate, Func<ValueType> factory)
+    {
+        return GetOrCreate(predicate, () => new TestType(factory()));   
     }
 }
 

@@ -16,22 +16,28 @@ public abstract class FlyweightBase<T, TInner>(TInner value) : IHasInnerValue<TI
     where TInner : class
 {
     private static readonly FlyWeightRepository<T, TInner> Instances = new();
-    private readonly TInner _value = value;
-    
+
     /// <inheritdoc cref="IFlyweightFactory{T, TInner}" />
     public static IEnumerable<T> AllValues => Instances.AllValues;
     
-    /// <inheritdoc cref="IFlyweightFactory{T, TInner}" />
-    protected static T Get(TInner key, Func<TInner,T> create) => Instances.Get(key, create);
+    /// <summary>
+    /// Gets or creates an instance of the flyweight type based on the inner value.
+    /// </summary>
+    protected static T GetOrCreate(TInner key, Func<TInner,T> create) => Instances.Get(key, create);
     
-    public override string ToString() => _value?.ToString() ?? string.Empty;
+    /// <summary>
+    /// Gets or creates an instance of the flyweight type based on the inner value.
+    /// </summary>
+    protected static T GetOrCreate(Predicate<TInner> predicate, Func<T> factory) => Instances.Get(predicate, factory);
+    
+    public override string ToString() => value?.ToString() ?? string.Empty;
 
     /// <inheritdoc cref="IHasInnerValue{TInner}.GetInnerValue"/>
-    public TInner GetInnerValue() => _value;
+    public TInner GetInnerValue() => value;
 
     public override bool Equals(object? obj) => ReferenceEquals(this, obj);
     
-    public override int GetHashCode() => _value?.GetHashCode() ?? 0;
+    public override int GetHashCode() => value?.GetHashCode() ?? 0;
 
     public static implicit operator TInner(FlyweightBase<T, TInner> flyweight) => flyweight.GetInnerValue();
     

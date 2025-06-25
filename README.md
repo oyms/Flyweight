@@ -54,10 +54,8 @@ class MyFlyweight : FlyweightBase<MyFlyweight>, IFlyweightFactory<MyFlyweight, s
     {
     }
 
-    public static MyFlyweight Get(string key)
-    {
-        return Get(key, value => new MyFlyweight(value));
-    }
+    public static MyFlyweight Get(string key) => GetOrCreate(key, value => new MyFlyweight(value));
+    public static MyFlyweight Get(Predicate<string> predicate, Func<string> factory) => GetOrCreate(predicate, () => new MyFlyweight(factory()));
 }
 ```
 
@@ -73,10 +71,8 @@ class MyFlyweight : FlyweightBase<MyFlyweight, ValueType>, IFlyweightFactory<MyF
     {
     }
 
-    public static MyFlyweight Get(ValueType key)
-    {
-        return Get(key, value => new MyFlyweight(value));
-    }
+    public static MyFlyweight Get(ValueType key) => GetOrCreate(key, value => new MyFlyweight(value));
+    public static MyFlyweight Get(Predicate<ValueType> predicate, Func<ValueType> factory) => GetOrCreate(predicate, () => new TestType(factory()));
 }
 
 record ValueType(bool BoolValue, int IntValue);
@@ -86,6 +82,13 @@ To get an instance (outside JSON serialization), you can use the `Get` method:
 
 ```csharp
 var myFlyweight = MyFlyweight.Get(myValue);
+```
+
+To get an instance without creating the inner value unneccessary, use `Get` with a predicate
+
+```csharp
+
+var myFlyweight = MyFlyweight.Get(x => x.IntValue == 42 && x.BoolValue, () => new ValueType(true, 42));
 ```
 
 To get all instances of the flyweight, you can use the `GetAll` method:
