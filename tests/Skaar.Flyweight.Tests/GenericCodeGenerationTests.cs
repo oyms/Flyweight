@@ -1,5 +1,6 @@
 using Shouldly;
 using Skaar.Flyweight;
+using Xunit.Sdk;
 
 [assembly: GenerateFlyweightClass<Skaar.Flyweight.Tests.TestValue>("TestNs.GenericTestType")]
 
@@ -39,9 +40,42 @@ public class GenericCodeGenerationTests
         
         first.ShouldBe(second);
     }
+    
+    [Fact]
+    public void GeneratedGenericClass_ShouldImplementIComparable()
+    {
+        typeof(TestTypeShouldImplementIComparable).Implements(typeof(IComparable<TestValueIComparable>)).ShouldBeTrue();
+        typeof(TestTypeShouldImplementIComparable).Implements(typeof(IComparable<int>)).ShouldBeTrue();
+        typeof(TestTypeShouldImplementIComparable).Implements(typeof(IComparable<int?>)).ShouldBeTrue();
+    }
 }
 
 public record TestValue(int Value);
 
+public record TestValueIComparable(int Value) : 
+    IComparable<TestValueIComparable>, 
+    IComparable<int>,
+    IComparable<int?>
+{
+    public int CompareTo(TestValueIComparable? other)
+    {
+        if (other is null) return 1;
+        return Value.CompareTo(other.Value);
+    }
+
+    public int CompareTo(int other)
+    {
+        return Value.CompareTo(other);
+    }
+    public int CompareTo(int? other)
+    {
+        if (other is null) return 1;
+        return Value.CompareTo(other);
+    }
+}
+
 [Flyweight<TestValue>]
 partial class TestType3;
+
+[Flyweight<TestValueIComparable>]
+partial class TestTypeShouldImplementIComparable;

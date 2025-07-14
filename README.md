@@ -145,3 +145,7 @@ Or use the `GenerateFlyweightClassAttribute` to generate a new flyweight class;
 [assembly: GenerateFlyweightClass("MyNamespace.MyFlyweight")] // for strings
 [assembly: GenerateFlyweightClass<DataType>("MyNamespace.MyOtherFlyweight")]
 ```
+
+## Generated implementations for the generic variant
+
+The generated class will have explicit implementations of all `IComparable<T>` that the inner DataType implements. 

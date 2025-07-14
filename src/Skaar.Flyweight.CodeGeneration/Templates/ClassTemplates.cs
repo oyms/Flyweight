@@ -144,7 +144,7 @@ class ClassTemplates
            """;
         return source;
     }    
-    public string TypeBasedClass(string className, string @namespace, string visibility, string innerValueType)
+    public string TypeBasedClass(string className, string @namespace, string visibility, string innerValueType, InterfaceImplementations interfaces)
     {
         var source = $$"""
            using System.Diagnostics.CodeAnalysis;
@@ -157,11 +157,12 @@ class ClassTemplates
            [System.CodeDom.Compiler.GeneratedCode("{{ToolName}}", "{{ToolVersion}}")] 
            [JsonConverter(typeof(FlyweightJsonConverter<{{className}}, {{innerValueType}}>))]
            {{visibility}}partial class {{className}} : 
-                FlyweightBase<{{className}}, {{innerValueType}}>, IFlyweightFactory<{{className}}, {{innerValueType}}>
+                FlyweightBase<{{className}}, {{innerValueType}}>, IFlyweightFactory<{{className}}, {{innerValueType}}> {{interfaces.InterfaceList()}}
            {
                private {{className}}({{innerValueType}} key) : base(key)
                {
                }
+           {{interfaces.Implementations()}}
                
                public static {{className}} Get({{innerValueType}} key) => GetOrCreate(key, value => new {{className}}(value));
                public static {{className}} Get(Predicate<{{innerValueType}}> predicate, Func<{{innerValueType}}> factory) => GetOrCreate(predicate, () => new {{className}}(factory()));   

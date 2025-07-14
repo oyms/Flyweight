@@ -70,9 +70,14 @@ public class Generator : IIncrementalGenerator
                     Accessibility.Internal => "internal ",
                     _ => string.Empty
                 };
+                
+                
 
                 productionContext.AddSource($"{ns}.{className}.{typeArg.ToDisplayString()}.g.cs",
-                    templates.TypeBasedClass(className, ns, visibility, typeArg.ToDisplayString()));
+                    templates.TypeBasedClass(
+                        className, ns, visibility, 
+                        typeArg.ToDisplayString(), 
+                        new InterfaceImplementations(typeArg)));
             }
         });
     }
@@ -99,7 +104,7 @@ public class Generator : IIncrementalGenerator
         context.RegisterSourceOutput(markers, ((productionContext, args) =>
         {
             var source = templates.TypeBasedClass(args.Name.Name, args.Name.Namespace, "public ",
-                args.TypeArg.ToDisplayString());
+                args.TypeArg.ToDisplayString(), new InterfaceImplementations(args.TypeArg));
             productionContext.AddSource($"{GenerateAttributeName}.{args.TypeArg.Name}.{args.Name.Name}.g.cs",
                 SourceText.From(source, Encoding.UTF8));
         }));
