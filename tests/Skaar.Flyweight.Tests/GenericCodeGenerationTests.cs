@@ -3,6 +3,7 @@ using Skaar.Flyweight;
 using Xunit.Sdk;
 
 [assembly: GenerateFlyweightClass<Skaar.Flyweight.Tests.TestValue>("TestNs.GenericTestType")]
+[assembly: GenerateFlyweightClass<Skaar.Flyweight.Tests.TestValueIComparable>("TestNs.GenericTestType1")]
 
 namespace Skaar.Flyweight.Tests;
 
@@ -44,6 +45,7 @@ public class GenericCodeGenerationTests
     [Fact]
     public void GeneratedGenericClass_ShouldImplementIComparable()
     {
+        typeof(TestNs.GenericTestType1).Implements(typeof(IComparable<TestValueIComparable>)).ShouldBeTrue();
         typeof(TestTypeShouldImplementIComparable).Implements(typeof(IComparable<TestValueIComparable>)).ShouldBeTrue();
         typeof(TestTypeShouldImplementIComparable).Implements(typeof(IComparable<int>)).ShouldBeTrue();
         typeof(TestTypeShouldImplementIComparable).Implements(typeof(IComparable<int?>)).ShouldBeTrue();

@@ -11,7 +11,7 @@ namespace Skaar.Flyweight;
 /// <typeparam name="T">The type of the flyweight class.</typeparam>
 /// <typeparam name="TInner">The type of inner value.</typeparam>
 /// <remarks>The type of <typeparamref name="TInner"/> should be equatable with itself.</remarks>
-public abstract class FlyweightBase<T, TInner>(TInner value) : IHasInnerValue<TInner>
+public abstract class FlyweightBase<T, TInner>(TInner value) : IHasInnerValue<TInner>, IPurgable
     where T : FlyweightBase<T, TInner> , IFlyweightFactory<T, TInner>
     where TInner : class
 {
@@ -59,5 +59,11 @@ public abstract class FlyweightBase<T, TInner>(TInner value) : IHasInnerValue<TI
     /// <summary>
     /// Removes all orphaned (garbage-collected) instances from the repository.
     /// </summary>
-    public static void Purge() => Instances.Purge();
+    public static void PurgeAll() => Instances.Purge();
+    
+    void IPurgable.Purge()
+    {
+        Instances.Purge((T)this);
+    }
+
 }

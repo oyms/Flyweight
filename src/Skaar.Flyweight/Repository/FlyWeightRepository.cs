@@ -3,15 +3,21 @@ using Skaar.Flyweight.Contracts;
 
 namespace Skaar.Flyweight.Repository;
 
-internal class FlyWeightRepository<T> where T:IHasInnerValue<string>
+internal class FlyWeightRepository<T> where T:IHasInnerValue<string>, IPurgable
 {
-    private static readonly Lock _lock = new();
+    // ReSharper disable once StaticMemberInGenericType
+    private static readonly Lock Lock = new();
     private readonly StringRepository _stringRepository = new();
     private static readonly ConcurrentDictionary<string, T> Instances = new();
-    public T Get(string key, Func<string,T> create) => Instances.GetOrAdd(_stringRepository.Get(key), create);
+    public T Get(string key, Func<string,T> create) => Instances.GetOrAdd(_stringRepository.Get(key), k =>
+    {
+        var instance = create(k);
+        FlyWeightScope.Current?.Add(instance);
+        return instance;
+    });
     public T Get(Predicate<string> predicate, Func<T> factory)
     {
-        lock (_lock)
+        lock (Lock)
         {
             var existing = Instances.Keys.FirstOrDefault(x => predicate(x));
             if (existing is not null)
@@ -22,32 +28,45 @@ internal class FlyWeightRepository<T> where T:IHasInnerValue<string>
             var instance = factory.Invoke();
             var key = _stringRepository.Get(instance.GetInnerValue());
             Instances[key] = instance;
+            FlyWeightScope.Current?.Add(instance);
             return instance;
         }
     }
     public IEnumerable<T> AllValues => Instances.Values;
+    
+    public void Purge(T value)
+    {
+        Instances.Remove(value.GetInnerValue(), out var _);
+    }
 }
 
-internal class FlyWeightRepository<T, TInner> where TInner : notnull where T : class, IHasInnerValue<TInner>
+internal class FlyWeightRepository<T, TInner> where TInner : notnull where T : class, IHasInnerValue<TInner>, IPurgable
 {
-    private static readonly Lock _lock = new();
+    private static readonly Lock Lock = new();
     private static readonly ConcurrentDictionary<TInner, WeakReference<T>> Instances = new();
     public T Get(TInner key, Func<TInner,T> create)
     {
-        var reference = Instances.GetOrAdd(key, x => new WeakReference<T>(create(x)));
+        WeakReference<T> Create(TInner inner)
+        {
+            var wrapper = create(inner);
+            FlyWeightScope.Current?.Add(wrapper);
+            return new WeakReference<T>(wrapper);
+        }
+        
+        var reference = Instances.GetOrAdd(key, Create);
         if (reference.TryGetTarget(out var value))
         {
             return value;
         }
 
         Instances.Remove(key, out _);
-        Instances.GetOrAdd(key, (x) => new WeakReference<T>(create(x)));
+        Instances.GetOrAdd(key, Create);
         return Get(key, create);
     }
     
     public T Get (Predicate<TInner> predicate, Func<T> factory)
     {
-        lock (_lock)
+        lock (Lock)
         {
             var existing = Instances.Keys.FirstOrDefault(x => predicate(x));
             if (existing is not null && Instances[existing].TryGetTarget(out var value))
@@ -58,6 +77,7 @@ internal class FlyWeightRepository<T, TInner> where TInner : notnull where T : c
             var innerValue = factory.Invoke();
             var key = innerValue.GetInnerValue();
             Instances[key] = new WeakReference<T>(innerValue);
+            FlyWeightScope.Current?.Add(innerValue);
             return innerValue;
         }
     }
@@ -69,7 +89,7 @@ internal class FlyWeightRepository<T, TInner> where TInner : notnull where T : c
 
     public void Purge()
     {
-        lock (_lock)
+        lock (Lock)
         {
             var deadKeys = Instances.Keys.Where(k => Instances[k].TryGetTarget(out var _) == false).ToList();
             foreach (var key in deadKeys)
@@ -77,5 +97,10 @@ internal class FlyWeightRepository<T, TInner> where TInner : notnull where T : c
                 Instances.Remove(key, out _);
             }
         }
+    }
+
+    public void Purge(T value)
+    {
+        Instances.Remove(value.GetInnerValue(), out var _);
     }
 }

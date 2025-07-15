@@ -12,7 +12,7 @@ namespace Skaar.Flyweight;
 /// <typeparam name="T">The type of the flyweight class.</typeparam>
 public abstract class FlyweightBase<T>(string value) : 
     IHasInnerValue<string>, IComparable<T>,
-    IFormattable, IParsable<T>
+    IFormattable, IParsable<T>, IPurgable
     where T : FlyweightBase<T>, IFlyweightFactory<T, string>
 {
     private static readonly FlyWeightRepository<T> Instances = new();
@@ -103,6 +103,8 @@ public abstract class FlyweightBase<T>(string value) :
     {
         return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
     }
+    
+    void IPurgable.Purge() => Instances.Purge((T)this);
 
     public virtual string ToString(string? format, IFormatProvider? _ = null) => _value;
     public static T Parse(string s, IFormatProvider? _ = null) => T.Get(s);

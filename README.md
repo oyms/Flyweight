@@ -117,7 +117,7 @@ Add both the code generation package and the Flyweight library to your .csproj f
 </ItemGroup>
 ```
 
-## Usage
+### Usage
 
 Add the `Flyweight` attribute to a partial class that you want to use as a flyweight.
 
@@ -146,6 +146,23 @@ Or use the `GenerateFlyweightClassAttribute` to generate a new flyweight class;
 [assembly: GenerateFlyweightClass<DataType>("MyNamespace.MyOtherFlyweight")]
 ```
 
-## Generated implementations for the generic variant
+### Generated implementations for the generic variant
 
-The generated class will have explicit implementations of all `IComparable<T>` that the inner DataType implements. 
+The generated class will have explicit implementations of all `IComparable<T>` that the inner DataType implements.
+
+## Using scope
+
+By using a `FlyweightScope`, the internal catalogue of values created within the scope is purged.
+This allows for memory to be reclaimed when the scope is disposed and the instances are no longer used.
+
+```csharp
+// first and second will by the same instance (ReferenceEquals will be true).
+// third will be a new instance, as it is outside the scope.
+using(FlyWeightScope.Create())
+{
+    var first = MyFlyweight.Get("a");
+    var second = MyFlyweight.Get("a");
+}
+
+var third = MyFlyweight.Get("a");
+```
