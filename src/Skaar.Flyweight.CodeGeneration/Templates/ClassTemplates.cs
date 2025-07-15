@@ -138,7 +138,6 @@ class ClassTemplates
                }
                
                public static {{className}} Get(string key) => GetOrCreate(key, value => new {{className}}(value));
-               
                public static {{className}} Get(Predicate<string> predicate, Func<string> factory) => GetOrCreate(predicate, () => new {{className}}(factory()));
            }
            """;

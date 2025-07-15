@@ -1,6 +1,7 @@
 using  global;
 using Shouldly;
 using Skaar.Flyweight;
+using Xunit.Sdk;
 
 [assembly: GenerateFlyweightClass("TestNs.TestType")]
 [assembly: GenerateFlyweightClass("TestNs.TestType")]

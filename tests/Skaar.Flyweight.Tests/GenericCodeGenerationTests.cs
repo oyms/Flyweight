@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Globalization;
 using System.Net;
 using Shouldly;
@@ -8,6 +9,7 @@ using Xunit.Sdk;
 [assembly: GenerateFlyweightClass<Skaar.Flyweight.Tests.TestValue>("TestNs.GenericTestType")]
 [assembly: GenerateFlyweightClass<Skaar.Flyweight.Tests.TestValueIComparable>("TestNs.GenericTestType1")]
 [assembly: GenerateFlyweightClass<TestValueFormattable>("TestNs.TestTypeWithFormattable")]
+[assembly: GenerateFlyweightClass<TestValueEnumerable>("TestNs.TestTypeWithEnumerable")]
 
 namespace Skaar.Flyweight.Tests;
 
@@ -54,6 +56,14 @@ public class GenericCodeGenerationTests
         typeof(TestTypeShouldImplementIComparable).Implements(typeof(IComparable<int>)).ShouldBeTrue();
         typeof(TestTypeShouldImplementIComparable).Implements(typeof(IComparable<int?>)).ShouldBeTrue();
     }
+
+    [Fact]
+    public void GeneratedGenericClass_ShouldImplementIEnumerable()
+    {
+        typeof(TestNs.TestTypeWithEnumerable).Implements(typeof(IEnumerable<string>)).ShouldBeTrue();
+        typeof(TestNs.TestTypeWithEnumerable).Implements(typeof(IEnumerable<bool>)).ShouldBeTrue();
+    }
+
     
     [Fact]
     public void GeneratedGenericClass_ShouldImplementFormattable()
@@ -94,11 +104,28 @@ public record TestValueIComparable(int Value) :
 
 public record TestValueFormattable(DateTime Value) : IFormattable
 {
-    /// <inheritdoc cref="DateTimeOffset.ToString(string, IFormatProvider)"/>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
         FormattableString formattable = $"{nameof(Value)}: {Value}";
         return formattable.ToString(formatProvider);
+    }
+}
+
+public record TestValueEnumerable : IEnumerable<string>, IEnumerable<bool>
+{
+    IEnumerator<bool> IEnumerable<bool>.GetEnumerator()
+    {
+        throw new NotImplementedException();
+    }
+
+    IEnumerator<string> IEnumerable<string>.GetEnumerator()
+    {
+        throw new NotImplementedException();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        throw new NotImplementedException();
     }
 }
 

@@ -148,7 +148,7 @@ Or use the `GenerateFlyweightClassAttribute` to generate a new flyweight class;
 
 ### Generated implementations for the generic variant
 
-The generated class will have explicit implementations of all `IComparable<T>` that the inner DataType implements.
+The generated class will have explicit implementations of all `IComparable<T>` and `IEnumerable<T>` that the inner DataType implements.
 If the inner value implements `IFormattable`, the generated class will also implement `IFormattable`.
 
 ## Using scope
