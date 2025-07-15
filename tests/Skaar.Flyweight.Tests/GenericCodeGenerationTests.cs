@@ -1,9 +1,13 @@
+using System.Globalization;
+using System.Net;
 using Shouldly;
 using Skaar.Flyweight;
+using Skaar.Flyweight.Tests;
 using Xunit.Sdk;
 
 [assembly: GenerateFlyweightClass<Skaar.Flyweight.Tests.TestValue>("TestNs.GenericTestType")]
 [assembly: GenerateFlyweightClass<Skaar.Flyweight.Tests.TestValueIComparable>("TestNs.GenericTestType1")]
+[assembly: GenerateFlyweightClass<TestValueFormattable>("TestNs.TestTypeWithFormattable")]
 
 namespace Skaar.Flyweight.Tests;
 
@@ -50,6 +54,18 @@ public class GenericCodeGenerationTests
         typeof(TestTypeShouldImplementIComparable).Implements(typeof(IComparable<int>)).ShouldBeTrue();
         typeof(TestTypeShouldImplementIComparable).Implements(typeof(IComparable<int?>)).ShouldBeTrue();
     }
+    
+    [Fact]
+    public void GeneratedGenericClass_ShouldImplementFormattable()
+    {
+        var inner = new TestValueFormattable(DateTime.Now);
+        IFormattable target = TestNs.TestTypeWithFormattable.Get(inner);
+        var formatter = CultureInfo.InvariantCulture;
+
+        var innerString = inner.ToString("D", formatter);
+        var outerString = target.ToString("D", formatter);
+        innerString.ShouldBe(outerString);
+    }
 }
 
 public record TestValue(int Value);
@@ -73,6 +89,16 @@ public record TestValueIComparable(int Value) :
     {
         if (other is null) return 1;
         return Value.CompareTo(other);
+    }
+}
+
+public record TestValueFormattable(DateTime Value) : IFormattable
+{
+    /// <inheritdoc cref="DateTimeOffset.ToString(string, IFormatProvider)"/>
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        FormattableString formattable = $"{nameof(Value)}: {Value}";
+        return formattable.ToString(formatProvider);
     }
 }
 

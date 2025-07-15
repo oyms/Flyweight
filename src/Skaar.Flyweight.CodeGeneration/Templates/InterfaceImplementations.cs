@@ -8,17 +8,25 @@ namespace Skaar.Flyweight.Templates;
 
 class InterfaceImplementations
 {
+    private readonly ITypeSymbol _valueTypeSymbol;
     private List<ITypeSymbol> _iComparableInterfaces;
+    private bool _iFormattable;
     public InterfaceImplementations(ITypeSymbol valueTypeSymbol)
     {
+        _valueTypeSymbol = valueTypeSymbol;
         _iComparableInterfaces = GetIComparableInterfaces(valueTypeSymbol).ToList();
+        _iFormattable = valueTypeSymbol.AllInterfaces.Any(i => i.Name == "IFormattable");
     }
 
     public string InterfaceList()
     {
-        if(_iComparableInterfaces.Count == 0) return string.Empty;
         var interfaces = _iComparableInterfaces.Select(i => $"System.IComparable<{i.ToDisplayString()}>");
-        return $", {string.Join(", ", interfaces)}";
+        if (_iFormattable)
+        {
+            interfaces = interfaces.Append($"System.IFormattable");
+        }
+        var list = $", {string.Join(", ", interfaces)}";
+        return list.Length > 2 ? list : string.Empty;
     }
 
     public string Implementations()
@@ -28,6 +36,13 @@ class InterfaceImplementations
         {
             stringBuidler.AppendLine($$"""
                 int System.IComparable<{{i.ToDisplayString()}}>.CompareTo({{i.ToDisplayString()}} other) => GetInnerValue().CompareTo(other); 
+            """);
+        }
+
+        if (_iFormattable)
+        {
+            stringBuidler.AppendLine($$"""
+                string System.IFormattable.ToString(string? format, IFormatProvider? formatProvider) => ((System.IFormattable) GetInnerValue()).ToString(format, formatProvider); 
             """);
         }
         return stringBuidler.ToString();
