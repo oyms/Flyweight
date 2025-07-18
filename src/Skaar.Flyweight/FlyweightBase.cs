@@ -15,7 +15,7 @@ public abstract class FlyweightBase<T>(string value) :
     IFormattable, IParsable<T>, IPurgable
     where T : FlyweightBase<T>, IFlyweightFactory<T, string>
 {
-    private static readonly FlyWeightRepository<T> Instances = new();
+    private static readonly FlyWeightRepository<T, string> Instances = new();
     private readonly string _value = value;
 
     /// <inheritdoc cref="IFlyweightFactory{T, TInner}" />

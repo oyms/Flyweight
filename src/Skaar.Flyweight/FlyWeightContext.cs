@@ -4,7 +4,9 @@ namespace Skaar.Flyweight;
 
 public class FlyWeightScope : IDisposable
 {
-    private readonly List<IPurgable> _purgables = new();
+    private readonly Lock _lock = new();
+    private bool _isDisposed;
+    private readonly List<IPurgable> _purgeables = [];
     private static readonly AsyncLocal<Stack<FlyWeightScope>> Parents = new();
 
     private FlyWeightScope()
@@ -13,20 +15,30 @@ public class FlyWeightScope : IDisposable
 
     internal void Add(IPurgable purgable)
     {
-        _purgables.Add(purgable);
+        lock (_lock)
+        {
+            if (_isDisposed) throw new InvalidOperationException("Cannot add purgable to a disposed FlyWeightScope.");
+            _purgeables.Add(purgable);
+        }
     }
     
     public void Dispose()
     {
-        foreach (var purgable in _purgables)
+        lock (_lock)
         {
-            purgable.Purge();
-        }
-        _purgables.Clear();
-        var stack = Parents.Value;
-        if (stack?.Count > 0)
-        {
-            stack.Pop();
+            foreach (var purgable in _purgeables)
+            {
+                purgable.Purge();
+            }
+
+            _purgeables.Clear();
+            var stack = Parents.Value;
+            if (stack?.Count > 0)
+            {
+                stack.Pop();
+            }
+
+            _isDisposed = true;
         }
     }
 
