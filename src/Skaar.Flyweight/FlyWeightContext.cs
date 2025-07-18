@@ -5,8 +5,7 @@ namespace Skaar.Flyweight;
 public class FlyWeightScope : IDisposable
 {
     private readonly List<IPurgable> _purgables = new();
-    private static readonly AsyncLocal<FlyWeightScope?> CurrentContext = new();
-    private static FlyWeightScope? _parent;
+    private static readonly AsyncLocal<Stack<FlyWeightScope>> Parents = new();
 
     private FlyWeightScope()
     {
@@ -24,14 +23,20 @@ public class FlyWeightScope : IDisposable
             purgable.Purge();
         }
         _purgables.Clear();
-        CurrentContext.Value = _parent;
+        var stack = Parents.Value;
+        if (stack?.Count > 0)
+        {
+            stack.Pop();
+        }
     }
 
     public static FlyWeightScope Create()
     {
-        _parent = CurrentContext.Value;
-        return CurrentContext.Value = new();
+        var scope = new FlyWeightScope();
+        Parents.Value ??= new Stack<FlyWeightScope>();
+        Parents.Value.Push(scope);
+        return scope;
     }
 
-    internal static FlyWeightScope? Current => CurrentContext.Value;
+    internal static FlyWeightScope? Current => Parents.Value?.Count > 0 ? Parents.Value!.Peek() : null;
 }
