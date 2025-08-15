@@ -127,6 +127,8 @@ class ClassTemplates
            using Skaar.Flyweight.Contracts;
            using Skaar.Flyweight.Serialization;
 
+           #nullable enable
+           
            namespace {{@namespace}};
            [System.CodeDom.Compiler.GeneratedCode("{{ToolName}}", "{{ToolVersion}}")] 
            [JsonConverter(typeof(FlyweightJsonConverter<{{className}}>))]
@@ -151,6 +153,8 @@ class ClassTemplates
            using Skaar.Flyweight;
            using Skaar.Flyweight.Contracts;
            using Skaar.Flyweight.Serialization;
+           
+           #nullable enable
 
            namespace {{@namespace}};
            [System.CodeDom.Compiler.GeneratedCode("{{ToolName}}", "{{ToolVersion}}")] 

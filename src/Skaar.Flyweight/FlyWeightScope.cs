@@ -2,6 +2,12 @@ using Skaar.Flyweight.Contracts;
 
 namespace Skaar.Flyweight;
 
+/// <summary>
+/// Flyweight instances created within this scope
+/// will be purged from the static lookup repository at the end of the scope (when <see cref="Dispose"/> is called).
+/// This is a way to reduce/eliminate memory leaks, as static references to the inner values are removed
+/// so they can be removed by the garbace collector.
+/// </summary>
 public class FlyWeightScope : IDisposable
 {
     private readonly Lock _lock = new();
@@ -42,6 +48,10 @@ public class FlyWeightScope : IDisposable
         }
     }
 
+    /// <summary>
+    /// Creates a new scope.
+    /// This should be created within a <c>using</c> scope.
+    /// </summary>
     public static FlyWeightScope Create()
     {
         var scope = new FlyWeightScope();

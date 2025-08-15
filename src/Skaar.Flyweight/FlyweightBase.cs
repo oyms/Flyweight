@@ -11,7 +11,7 @@ namespace Skaar.Flyweight;
 /// <param name="value">The value of the instance.</param>
 /// <typeparam name="T">The type of the flyweight class.</typeparam>
 public abstract class FlyweightBase<T>(string value) : 
-    IHasInnerValue<string>, IComparable<T>,
+    IHasInnerValue<string>, IComparable<T>, IEquatable<T>,
     IFormattable, IParsable<T>, IPurgable
     where T : FlyweightBase<T>, IFlyweightFactory<T, string>
 {
@@ -68,11 +68,13 @@ public abstract class FlyweightBase<T>(string value) :
     /// <inheritdoc cref="IHasInnerValue{TInner}.GetInnerValue"/>
     public string GetInnerValue() => _value;
 
+    public bool Equals(T? other) => ReferenceEquals(this, other) || _value == other?._value;
+
     public override bool Equals(object? obj) => ReferenceEquals(this, obj);
 
     public override int GetHashCode() => _value.GetHashCode(StringComparison.InvariantCulture);
     
-    public static bool operator ==(FlyweightBase<T> left, FlyweightBase<T> right)
+    public static bool operator ==(FlyweightBase<T>? left, FlyweightBase<T>? right)
     {
         if (ReferenceEquals(left, null))
         {
@@ -82,24 +84,24 @@ public abstract class FlyweightBase<T>(string value) :
         return left.Equals(right);
     }
 
-    public static bool operator !=(FlyweightBase<T> left, FlyweightBase<T> right) => !(left == right);
+    public static bool operator !=(FlyweightBase<T>? left, FlyweightBase<T>? right) => !(left == right);
     
-    public static bool operator <(FlyweightBase<T> left, FlyweightBase<T> right)
+    public static bool operator <(FlyweightBase<T>? left, FlyweightBase<T>? right)
     {
         return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
     }
 
-    public static bool operator <=(FlyweightBase<T> left, FlyweightBase<T> right)
+    public static bool operator <=(FlyweightBase<T>? left, FlyweightBase<T>? right)
     {
         return ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
     }
 
-    public static bool operator >(FlyweightBase<T> left, FlyweightBase<T> right)
+    public static bool operator >(FlyweightBase<T>? left, FlyweightBase<T>? right)
     {
         return !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
     }
 
-    public static bool operator >=(FlyweightBase<T> left, FlyweightBase<T> right)
+    public static bool operator >=(FlyweightBase<T>? left, FlyweightBase<T>? right)
     {
         return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
     }

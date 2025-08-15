@@ -3,7 +3,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);CS1591;CA1822</NoWarn>
         <AssemblyVersion>$(Version)</AssemblyVersion>
-        <VersionPrefix>1.3.1</VersionPrefix>
+        <VersionPrefix>1.3.2</VersionPrefix>
         <Product>Flyweight</Product>
         <Authors>Skaar</Authors>
         <Description>A library to implement the flyweight pattern.</Description>
@@ -23,6 +23,7 @@
             1.2.0: Generate IComparable
             1.3.0: Using scope. Generate IFormattable. Generate IEnumerable.
             1.3.1: Thread safe scope. Optimizations.
+            1.3.2: Nullability annotations
         </PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <IsPackable>true</IsPackable>
