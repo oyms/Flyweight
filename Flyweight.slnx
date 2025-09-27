@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/SolutionItems/">
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+    <File Path="resources/logo.png" />
+    <File Path="src/CommonProps.targets" />
+  </Folder>
+  <Project Path="src/Skaar.Flyweight.CodeGeneration/Skaar.Flyweight.CodeGeneration.csproj" />
+  <Project Path="src/Skaar.Flyweight/Skaar.Flyweight.csproj" />
+  <Project Path="tests/Skaar.Flyweight.Tests/Skaar.Flyweight.Tests.csproj" />
+</Solution>
