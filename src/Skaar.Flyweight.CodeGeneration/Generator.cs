@@ -17,8 +17,8 @@ public class Generator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        // The attributes live in the Skaar.Flyweight library, so every consuming assembly shares one definition of them.
         var templates = new ClassTemplates();
-        GenerateAttributeFiles(context, templates);
 
         GenerateStringBasedClassExtensionFiles(context, templates);
         GenerateStringBasedCreatedClassFiles(context, templates);
@@ -164,35 +164,6 @@ public class Generator : IIncrementalGenerator
                 productionContext.AddSource($"{ns}.{className}.g.cs",
                     templates.StringBasedClass(className, ns, visibility));
             }
-        });
-    }
-
-    private static void GenerateAttributeFiles(IncrementalGeneratorInitializationContext context,
-        ClassTemplates templates)
-    {
-        context.RegisterPostInitializationOutput(ctx =>
-        {
-            ctx.AddSource($"{ExtendAttributeName}.g.cs", SourceText.From(
-                templates.NonGenericExtendAttribute(ExtendAttributeName, AttributeNamespace), Encoding.UTF8
-            ));
-        });
-        context.RegisterPostInitializationOutput(ctx =>
-        {
-            ctx.AddSource($"{GenerateAttributeName}.g.cs", SourceText.From(
-                templates.NonGenericGenerateAttribute(GenerateAttributeName, AttributeNamespace), Encoding.UTF8
-            ));
-        });
-        context.RegisterPostInitializationOutput(ctx =>
-        {
-            ctx.AddSource($"{ExtendAttributeName}.generic.g.cs", SourceText.From(
-                templates.Generic1ExtendAttribute(ExtendAttributeName, AttributeNamespace), Encoding.UTF8
-            ));
-        });
-        context.RegisterPostInitializationOutput(ctx =>
-        {
-            ctx.AddSource($"{GenerateAttributeName}.generic.g.cs", SourceText.From(
-                templates.Generic1GenerateAttribute(GenerateAttributeName, AttributeNamespace), Encoding.UTF8
-            ));
         });
     }
 

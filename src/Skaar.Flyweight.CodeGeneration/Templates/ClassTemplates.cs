@@ -8,116 +8,6 @@ class ClassTemplates
     string ToolName => Assembly.GetExecutingAssembly().GetName().Name;
     Version ToolVersion => Assembly.GetExecutingAssembly().GetName().Version;
 
-    public string NonGenericExtendAttribute(string className, string @namespace)
-    {
-        return $$"""
-             using System;
-             using System.CodeDom.Compiler;
-
-             #pragma warning disable CS0436 // Type may be defined multiple times
-             namespace {{@namespace}};
-             /// <summary>
-             /// Classes decorated with this attribute will trigger code generation.
-             /// A partial part of the class will be generated in the same namespace.
-             /// The part will contain the implementation of the flyweight pattern.
-             /// </summary>
-             /// <seealso cref="FlyweightBase{T}"/>
-             [GeneratedCode("{{ToolName}}", "{{ToolVersion}}")]
-             [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false)]
-             public class {{className}} : System.Attribute
-             {}
-
-             """;
-    }
-    
-    public string NonGenericGenerateAttribute(string className, string @namespace)
-    {
-        return $$"""
-                 using System;
-                 using System.CodeDom.Compiler;
-
-                 #pragma warning disable CS0436 // Type may be defined multiple times
-                 namespace {{@namespace}};
-                 /// <summary>
-                 /// This attribute will trigger code generation.
-                 /// A partial class will be generated in the same namespace.
-                 /// The class will implement the flyweight pattern.
-                 /// </summary>
-                 /// <seealso cref="FlyweightBase{T}"/>
-                 [GeneratedCode("{{ToolName}}", "{{ToolVersion}}")]
-                 [System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple = true)]
-                 public class {{className}} : System.Attribute
-                 {
-                     /// <param name="fullName">
-                     /// The full name of the generated class (namespace and class name).
-                     /// The name must be a valid class name
-                     /// </param>
-                     public {{className}}(string fullName)
-                     {
-                     }
-                 }
-
-                 """;
-    }    
-    
-    public string Generic1ExtendAttribute(string className, string @namespace)
-    {
-        return $$"""
-                 using System;
-                 using System.CodeDom.Compiler;
-
-                 #pragma warning disable CS0436 // Type may be defined multiple times
-                 namespace {{@namespace}};
-                 /// <summary>
-                 /// Classes decorated with this attribute will trigger code generation.
-                 /// A partial part of the class will be generated in the same namespace.
-                 /// The part will contain the implementation of the flyweight pattern.
-                 /// </summary>
-                 /// <typeparam name="T">The type of the inner value</typeparam>
-                 /// <seealso cref="FlyweightBase{T}"/>
-                 [GeneratedCode("{{ToolName}}", "{{ToolVersion}}")]
-                 [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false)]
-                 public class {{className}}<T> : System.Attribute where T : class
-                 {}
-
-                 """;
-    }
-    
-    public string Generic1GenerateAttribute(string className, string @namespace)
-    {
-        return $$"""
-                 using System;
-                 using System.CodeDom.Compiler;
-
-                 #pragma warning disable CS0436 // Type may be defined multiple times
-                 namespace {{@namespace}};
-                 /// <summary>
-                 /// This attribute will trigger code generation.
-                 /// A partial class will be generated in the same namespace.
-                 /// The class will implement the flyweight pattern.
-                 /// </summary>
-                 /// <typeparam name="T">The type of the inner value</typeparam>
-                 /// <seealso cref="FlyweightBase{T, TInner}"/>
-                 [GeneratedCode("{{ToolName}}", "{{ToolVersion}}")]
-                 [System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple = true)]
-                 public class {{className}}<T> : System.Attribute where T : class
-                 {
-                     /// <summary>
-                     /// Initializes a new instance of the <see cref="{{className}}{T}"/> class.
-                     /// </summary>
-                     /// <param name="fullName">
-                     /// The full name of the generated class (namespace and class name).
-                     /// The name must be a valid class name
-                     /// </param>
-                     public {{className}}(string fullName)
-                     {
-                     }
-
-                 }
-
-                 """;
-    }
-    
     public string StringBasedClass(string className, string @namespace, string visibility)
     {
         var source = $$"""
@@ -140,7 +30,7 @@ class ClassTemplates
                }
                
                public static {{className}} Get(string key) => GetOrCreate(key, value => new {{className}}(value));
-               public static {{className}} Get(Predicate<string> predicate, Func<string> factory) => GetOrCreate(predicate, () => new {{className}}(factory()));
+               public static {{className}} Get(System.Predicate<string> predicate, System.Func<string> factory) => GetOrCreate(predicate, () => new {{className}}(factory()));
            }
            """;
         return source;
@@ -168,7 +58,7 @@ class ClassTemplates
            {{interfaces.Implementations()}}
                
                public static {{className}} Get({{innerValueType}} key) => GetOrCreate(key, value => new {{className}}(value));
-               public static {{className}} Get(Predicate<{{innerValueType}}> predicate, Func<{{innerValueType}}> factory) => GetOrCreate(predicate, () => new {{className}}(factory()));   
+               public static {{className}} Get(System.Predicate<{{innerValueType}}> predicate, System.Func<{{innerValueType}}> factory) => GetOrCreate(predicate, () => new {{className}}(factory()));   
            }
            """;
         return source;

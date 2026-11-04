@@ -117,6 +117,9 @@ Add both the code generation package and the Flyweight library to your .csproj f
 </ItemGroup>
 ```
 
+The attributes (`Flyweight`, `GenerateFlyweightClass`) are defined in `Skaar.Flyweight`, so use the same major version of both packages.
+Several assemblies can use the generator and reference each other without type conflicts.
+
 ### Usage
 
 Add the `Flyweight` attribute to a partial class that you want to use as a flyweight.

@@ -60,7 +60,7 @@ class InterfaceImplementations
         if (_iFormattable)
         {
             stringBuidler.AppendLine($$"""
-                string System.IFormattable.ToString(string? format, IFormatProvider? formatProvider) => ((System.IFormattable) GetInnerValue()).ToString(format, formatProvider); 
+                string System.IFormattable.ToString(string? format, System.IFormatProvider? formatProvider) => ((System.IFormattable) GetInnerValue()).ToString(format, formatProvider); 
             """);
         }
         return stringBuidler.ToString();
