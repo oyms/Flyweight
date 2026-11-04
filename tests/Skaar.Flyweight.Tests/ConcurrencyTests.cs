@@ -43,11 +43,15 @@ public class ConcurrencyTests(ITestContextAccessor contextAccessor)
         const int groups = 1000, perGroup = 1000;
         var tasks = Enumerable.Range(0, groups).Select(_ => Generate(perGroup, () => ConcurrencyTest.FlyweightTypeGeneric.Get(new(Guid.NewGuid().ToString("N")))));
         var result = await Task.WhenAll(tasks);
-        _ = result.SelectMany(x => x).Select(x => ConcurrencyTest.FlyweightTypeGeneric1.Get(x.GetInnerValue())).ToList();
+        // Keep the instances alive until counted; the repository only holds weak references.
+        var others = result.SelectMany(x => x).Select(x => ConcurrencyTest.FlyweightTypeGeneric1.Get(x.GetInnerValue())).ToList();
         ConcurrencyTest.FlyweightTypeGeneric.AllValues.Count().ShouldBe(perGroup*groups);
         ConcurrencyTest.FlyweightTypeGeneric1.AllValues.Count().ShouldBe(perGroup*groups);
+        GC.KeepAlive(result);
+        GC.KeepAlive(others);
 
         result = null;
+        others = null;
         await ForceGarbageCollection();
 
         ConcurrencyTest.FlyweightTypeGeneric.AllValues.ShouldBeEmpty();
